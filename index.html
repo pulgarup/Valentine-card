@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>For Jaymis 💌</title>
 
   <!-- Confetti -->
@@ -171,6 +171,21 @@
     </section>
 
     <footer>Made with intention, not pressure 💌</footer>
+
+    <!-- Hidden iframe so Formspree doesn't redirect the page -->
+    <iframe name="notify_iframe" style="display:none;"></iframe>
+
+    <!-- Hidden form to email Jose via Formspree -->
+    <form id="notifyForm"
+          action="https://formspree.io/f/xvzqepyk"
+          method="POST"
+          target="notify_iframe"
+          style="display:none;">
+      <input type="hidden" name="_subject" id="fs_subject" value="" />
+      <input type="hidden" name="choice" id="fs_choice" value="" />
+      <input type="hidden" name="page" id="fs_page" value="" />
+      <input type="hidden" name="time" id="fs_time" value="" />
+    </form>
   </main>
 
   <script>
@@ -185,9 +200,6 @@
     const YES_MESSAGE = "Buena elección. La mejor elección que has hecho en tu vida. El 14 de Febrero toca celebrar.";
     const NO_MESSAGE  = "All good. Thank you for being honest.";
 
-    // ✅ Formspree endpoint (emails Jose on every Yes/No)
-    const NOTIFY_ENDPOINT = "https://formspree.io/f/xvzqepyk";
-
     // Confetti
     function celebrate() {
       if (typeof confetti !== "function") return;
@@ -195,23 +207,13 @@
       setTimeout(() => confetti({ particleCount: 80, spread: 70, origin: { y: 0.62 } }), 180);
     }
 
-    // ✅ Email notification via Formspree
-    async function notify(choice) {
-      try {
-        const data = new FormData();
-        data.append("choice", choice);                 // Yes / No
-        data.append("page", window.location.href);
-        data.append("time", new Date().toLocaleString());
-        data.append("_subject", `Valentine response: ${choice}`);
-
-        await fetch(NOTIFY_ENDPOINT, {
-          method: "POST",
-          body: data,
-          headers: { "Accept": "application/json" }
-        });
-      } catch (e) {
-        console.log("Email notification failed:", e);
-      }
+    // ✅ Email notification via hidden Formspree form (most reliable on GitHub Pages)
+    function notify(choice) {
+      document.getElementById("fs_subject").value = `Valentine response: ${choice}`;
+      document.getElementById("fs_choice").value = choice;
+      document.getElementById("fs_page").value = window.location.href;
+      document.getElementById("fs_time").value = new Date().toLocaleString();
+      document.getElementById("notifyForm").submit();
     }
 
     function showYes() {
@@ -236,52 +238,49 @@
       notify("Yes");
     });
 
-    // NO button dodges 5 times; 6th attempt allows click to show sad GIF + notify
-    let dodges = 0;
-    const maxDodges = 5;
+    // ✅ NO button dodges 5 times; 6th click shows sad GIF + email notify
+    let dodgeCount = 0;
+    const MAX_DODGES = 5;
 
     function dodge() {
       const x = Math.random() * 220 - 110;
-      const y = Math.random() * 90  - 45;
+      const y = Math.random() * 90 - 45;
       noBtn.classList.add("moving");
-      noBtn.style.transform = `translate(${x}px,${y}px)`;
-      setTimeout(() => noBtn.classList.remove("moving"), 220);
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      setTimeout(() => noBtn.classList.remove("moving"), 200);
 
-      const remaining = Math.max(0, maxDodges - dodges);
-      if (remaining > 0) {
-        hint.textContent = `😅 Are you sure? (${remaining} more...)`;
-      } else {
-        hint.textContent = "Okay okay—No is allowed 😄";
-      }
+      const remaining = MAX_DODGES - dodgeCount;
+      hint.textContent = remaining > 0
+        ? `😅 Are you sure? (${remaining} more…)`
+        : "Okay okay — No is allowed 😄";
     }
 
-    function attemptDodge() {
-      if (dodges < maxDodges) {
-        dodges++;
-        dodge();
-        return true; // dodged
-      }
-      hint.textContent = "Okay okay—No is allowed 😄";
-      return false; // allow click
-    }
-
-    // Desktop hover counts as an attempt (kept)
+    // Desktop hover = dodge (until limit)
     noBtn.addEventListener("mouseenter", () => {
-      attemptDodge();
+      if (dodgeCount < MAX_DODGES) {
+        dodgeCount++;
+        dodge();
+      }
     });
 
-    // Mobile tap attempt: if we still have dodges left, block the click
+    // Mobile tap attempt = dodge (until limit)
     noBtn.addEventListener("touchstart", (e) => {
-      if (attemptDodge()) e.preventDefault();
+      if (dodgeCount < MAX_DODGES) {
+        e.preventDefault(); // block the click
+        dodgeCount++;
+        dodge();
+      }
     }, { passive: false });
 
-    // On click: if dodges remain, dodge again; otherwise show sad GIF + notify
+    // Final click — ONLY after 5 dodges
     noBtn.addEventListener("click", () => {
-      if (dodges < maxDodges) {
-        dodges++;
+      if (dodgeCount < MAX_DODGES) {
+        // Block premature click and count it as a dodge attempt
+        dodgeCount++;
         dodge();
         return;
       }
+      // ✅ Sixth click: show sad GIF + notify
       noBtn.style.transform = "translate(0,0)";
       showNo();
       notify("No");
