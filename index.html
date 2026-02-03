@@ -8,14 +8,13 @@
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Tenor Embed -->
-  <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+  <!-- Tenor Embed (loads the GIF embeds) -->
+  <script async src="https://tenor.com/embed.js"></script>
 
   <style>
     :root{
       --bg1:#fff1f2;
       --bg2:#f8fafc;
-      --card:#ffffff;
       --text:#0f172a;
       --muted:#475569;
       --accent:#be123c;
@@ -44,16 +43,20 @@
       padding:32px;
       box-shadow:var(--shadow);
       text-align:center;
+      border: 1px solid rgba(226,232,240,.85);
+      overflow:hidden;
     }
 
-    h1{margin-bottom:8px}
-    .sub{color:var(--muted); margin-bottom:18px}
+    h1{margin:0 0 8px}
+    .sub{color:var(--muted); margin:0 0 18px; line-height:1.6}
 
     .actions{
       display:flex;
       gap:14px;
       justify-content:center;
       margin-top:20px;
+      flex-wrap:wrap;
+      align-items:center;
     }
 
     .btn{
@@ -63,7 +66,11 @@
       font-size:16px;
       cursor:pointer;
       border:none;
+      transition: transform .14s ease, box-shadow .14s ease;
+      user-select:none;
     }
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px rgba(2,6,23,.10); }
+    .btn:active{ transform: translateY(0px); box-shadow: 0 10px 18px rgba(2,6,23,.08); }
 
     .yes{
       background:linear-gradient(135deg,var(--accent),var(--accent2));
@@ -73,15 +80,35 @@
     .no{
       background:#f1f5f9;
       position:relative;
+      border: 1px solid rgba(226,232,240,.95);
     }
 
     .no.moving{
       transition:transform .18s ease;
     }
 
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      min-height:18px;
+    }
+
     .result{
       display:none;
       margin-top:24px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(248,250,252,.85);
+      border: 1px solid rgba(226,232,240,.95);
+      text-align:center;
+    }
+
+    #resultText{
+      margin: 14px 0 0;
+      font-weight: 650;
+      line-height: 1.55;
+      color: var(--text);
     }
 
     footer{
@@ -97,21 +124,22 @@
     <h1>Jaymis, I have a question…</h1>
     <p class="sub">Nothing complicated — just something sincere.</p>
 
-    <p>
-      <strong>Jaymis Figueroa</strong>,  
-      would you do me the honor of being my Valentine?
+    <p style="margin:0; line-height:1.7">
+      <strong>Jaymis Figueroa</strong>, would you do me the honor of being my Valentine?
       <br><span style="color:#64748b">— Jose Pulgar</span>
     </p>
 
     <div class="actions">
-      <button class="btn yes" id="yesBtn">Yes 💘</button>
-      <button class="btn no" id="noBtn">No 🙈</button>
+      <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
+      <button class="btn no" id="noBtn" type="button">No 🙈</button>
     </div>
 
-    <!-- RESULT -->
-    <section class="result" id="result">
+    <div class="hint" id="hint"></div>
 
-      <!-- YES GIF -->
+    <!-- RESULT -->
+    <section class="result" id="result" aria-live="polite">
+
+      <!-- YES GIF (Tenor embed) -->
       <div id="yesGif" style="display:none">
         <div class="tenor-gif-embed"
           data-postid="15931245853859273114"
@@ -119,25 +147,27 @@
           data-aspect-ratio="1"
           data-width="100%">
           <a href="https://tenor.com/view/friends-friendstv-friends-tv-tvfriends-tv-friends-gif-15931245853859273114">
-            Friends Celebration GIF
+            Friends Friendstv GIF
           </a>
+          from <a href="https://tenor.com/search/friends-gifs">Friends GIFs</a>
         </div>
       </div>
 
-      <!-- NO GIF -->
+      <!-- NO GIF (Tenor embed) -->
       <div id="noGif" style="display:none">
         <div class="tenor-gif-embed"
           data-postid="14859179"
           data-share-method="host"
-          data-aspect-ratio="2.1"
+          data-aspect-ratio="2.0915"
           data-width="100%">
           <a href="https://tenor.com/view/tv-shows-friends-ross-geller-sad-sobbing-gif-14859179">
-            Friends Sad GIF
+            Tv Shows Friends GIF
           </a>
+          from <a href="https://tenor.com/search/tv+shows-gifs">Tv Shows GIFs</a>
         </div>
       </div>
 
-      <p id="resultText" style="margin-top:14px;font-weight:600"></p>
+      <p id="resultText"></p>
     </section>
 
     <footer>Made with intention, not pressure 💌</footer>
@@ -150,41 +180,111 @@
     const yesGif = document.getElementById("yesGif");
     const noGif = document.getElementById("noGif");
     const resultText = document.getElementById("resultText");
+    const hint = document.getElementById("hint");
 
-    // CONFETTI
-    function celebrate(){
-      confetti({ particleCount: 120, spread: 80, origin:{y:0.6} });
+    const YES_MESSAGE = "Buena elección. La mejor elección que has hecho en tu vida. El 14 de Febrero toca celebrar.";
+    const NO_MESSAGE  = "All good. Thank you for being honest.";
+
+    // ✅ Formspree endpoint (emails Jose on every Yes/No)
+    const NOTIFY_ENDPOINT = "https://formspree.io/f/xvzqepyk";
+
+    // Confetti
+    function celebrate() {
+      if (typeof confetti !== "function") return;
+      confetti({ particleCount: 120, spread: 85, origin: { y: 0.62 } });
+      setTimeout(() => confetti({ particleCount: 80, spread: 70, origin: { y: 0.62 } }), 180);
     }
 
-    // YES CLICK
-    yesBtn.addEventListener("click", () => {
+    // ✅ Email notification via Formspree
+    async function notify(choice) {
+      try {
+        const data = new FormData();
+        data.append("choice", choice);                 // Yes / No
+        data.append("page", window.location.href);
+        data.append("time", new Date().toLocaleString());
+        data.append("_subject", `Valentine response: ${choice}`);
+
+        await fetch(NOTIFY_ENDPOINT, {
+          method: "POST",
+          body: data,
+          headers: { "Accept": "application/json" }
+        });
+      } catch (e) {
+        console.log("Email notification failed:", e);
+      }
+    }
+
+    function showYes() {
       result.style.display = "block";
       yesGif.style.display = "block";
       noGif.style.display = "none";
-      resultText.innerHTML =
-        "❤️ Buena elección. La mejor elección que has hecho en tu vida. El 14 de Febrero toca celebrar.";
-      celebrate();
-    });
+      resultText.innerHTML = "❤️ " + YES_MESSAGE;
+    }
 
-    // NO DODGE LOGIC (kept)
-    let dodges = 0;
-    noBtn.addEventListener("mouseenter", () => {
-      if(dodges < 2){
-        dodges++;
-        const x = Math.random()*200 - 100;
-        const y = Math.random()*80 - 40;
-        noBtn.classList.add("moving");
-        noBtn.style.transform = `translate(${x}px,${y}px)`;
-      }
-    });
-
-    // FINAL NO CLICK
-    noBtn.addEventListener("click", () => {
+    function showNo() {
       result.style.display = "block";
       noGif.style.display = "block";
       yesGif.style.display = "none";
-      resultText.innerHTML =
-        "😔 All good. Thank you for being honest.";
+      resultText.innerHTML = "😔 " + NO_MESSAGE;
+    }
+
+    // YES click → confetti + GIF + email notify
+    yesBtn.addEventListener("click", () => {
+      showYes();
+      celebrate();
+      hint.textContent = "";
+      notify("Yes");
+    });
+
+    // NO button dodges 5 times; 6th attempt allows click to show sad GIF + notify
+    let dodges = 0;
+    const maxDodges = 5;
+
+    function dodge() {
+      const x = Math.random() * 220 - 110;
+      const y = Math.random() * 90  - 45;
+      noBtn.classList.add("moving");
+      noBtn.style.transform = `translate(${x}px,${y}px)`;
+      setTimeout(() => noBtn.classList.remove("moving"), 220);
+
+      const remaining = Math.max(0, maxDodges - dodges);
+      if (remaining > 0) {
+        hint.textContent = `😅 Are you sure? (${remaining} more...)`;
+      } else {
+        hint.textContent = "Okay okay—No is allowed 😄";
+      }
+    }
+
+    function attemptDodge() {
+      if (dodges < maxDodges) {
+        dodges++;
+        dodge();
+        return true; // dodged
+      }
+      hint.textContent = "Okay okay—No is allowed 😄";
+      return false; // allow click
+    }
+
+    // Desktop hover counts as an attempt (kept)
+    noBtn.addEventListener("mouseenter", () => {
+      attemptDodge();
+    });
+
+    // Mobile tap attempt: if we still have dodges left, block the click
+    noBtn.addEventListener("touchstart", (e) => {
+      if (attemptDodge()) e.preventDefault();
+    }, { passive: false });
+
+    // On click: if dodges remain, dodge again; otherwise show sad GIF + notify
+    noBtn.addEventListener("click", () => {
+      if (dodges < maxDodges) {
+        dodges++;
+        dodge();
+        return;
+      }
+      noBtn.style.transform = "translate(0,0)";
+      showNo();
+      notify("No");
     });
   </script>
 </body>
