@@ -8,7 +8,7 @@
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Tenor Embed (loads the GIF embeds) -->
+  <!-- Tenor Embed -->
   <script async src="https://tenor.com/embed.js"></script>
 
   <style>
@@ -25,6 +25,7 @@
     }
 
     *{box-sizing:border-box}
+
     body{
       margin:0;
       min-height:100vh;
@@ -43,8 +44,7 @@
       padding:32px;
       box-shadow:var(--shadow);
       text-align:center;
-      border: 1px solid rgba(226,232,240,.85);
-      overflow:hidden;
+      border:1px solid rgba(226,232,240,.9);
     }
 
     h1{margin:0 0 8px}
@@ -56,7 +56,6 @@
       justify-content:center;
       margin-top:20px;
       flex-wrap:wrap;
-      align-items:center;
     }
 
     .btn{
@@ -66,11 +65,10 @@
       font-size:16px;
       cursor:pointer;
       border:none;
-      transition: transform .14s ease, box-shadow .14s ease;
       user-select:none;
+      transition:transform .14s ease, box-shadow .14s ease;
     }
-    .btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px rgba(2,6,23,.10); }
-    .btn:active{ transform: translateY(0px); box-shadow: 0 10px 18px rgba(2,6,23,.08); }
+    .btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(2,6,23,.1); }
 
     .yes{
       background:linear-gradient(135deg,var(--accent),var(--accent2));
@@ -79,13 +77,11 @@
 
     .no{
       background:#f1f5f9;
+      border:1px solid rgba(226,232,240,.95);
       position:relative;
-      border: 1px solid rgba(226,232,240,.95);
     }
 
-    .no.moving{
-      transition:transform .18s ease;
-    }
+    .no.moving{ transition:transform .18s ease; }
 
     .hint{
       margin-top:10px;
@@ -97,24 +93,28 @@
     .result{
       display:none;
       margin-top:24px;
-      padding: 16px;
-      border-radius: 16px;
-      background: rgba(248,250,252,.85);
-      border: 1px solid rgba(226,232,240,.95);
-      text-align:center;
+      padding:18px;
+      border-radius:16px;
+      background:rgba(248,250,252,.9);
+      border:1px solid rgba(226,232,240,.95);
+      text-align:left;
     }
 
     #resultText{
-      margin: 14px 0 0;
-      font-weight: 650;
-      line-height: 1.55;
-      color: var(--text);
+      margin:14px auto 0;
+      font-weight:650;
+      line-height:1.65;
+      max-width:62ch;
+      color:var(--text);
+      white-space:normal;
+      word-break:break-word;
     }
 
     footer{
       margin-top:24px;
       font-size:12px;
       color:var(--muted);
+      text-align:center;
     }
   </style>
 </head>
@@ -124,46 +124,37 @@
     <h1>Jaymis, I have a question…</h1>
     <p class="sub">Nothing complicated — just something sincere.</p>
 
-    <p style="margin:0; line-height:1.7">
+    <p style="line-height:1.7">
       <strong>Jaymis Figueroa</strong>, would you do me the honor of being my Valentine?
       <br><span style="color:#64748b">— Jose Pulgar</span>
     </p>
 
     <div class="actions">
-      <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
-      <button class="btn no" id="noBtn" type="button">No 🙈</button>
+      <button class="btn yes" id="yesBtn">Yes 💘</button>
+      <button class="btn no" id="noBtn">No 🙈</button>
     </div>
 
     <div class="hint" id="hint"></div>
 
-    <!-- RESULT -->
-    <section class="result" id="result" aria-live="polite">
+    <section class="result" id="result">
 
-      <!-- YES GIF (Tenor embed) -->
+      <!-- YES GIF -->
       <div id="yesGif" style="display:none">
         <div class="tenor-gif-embed"
           data-postid="15931245853859273114"
           data-share-method="host"
           data-aspect-ratio="1"
           data-width="100%">
-          <a href="https://tenor.com/view/friends-friendstv-friends-tv-tvfriends-tv-friends-gif-15931245853859273114">
-            Friends Friendstv GIF
-          </a>
-          from <a href="https://tenor.com/search/friends-gifs">Friends GIFs</a>
         </div>
       </div>
 
-      <!-- NO GIF (Tenor embed) -->
+      <!-- NO GIF -->
       <div id="noGif" style="display:none">
         <div class="tenor-gif-embed"
           data-postid="14859179"
           data-share-method="host"
-          data-aspect-ratio="2.0915"
+          data-aspect-ratio="2.1"
           data-width="100%">
-          <a href="https://tenor.com/view/tv-shows-friends-ross-geller-sad-sobbing-gif-14859179">
-            Tv Shows Friends GIF
-          </a>
-          from <a href="https://tenor.com/search/tv+shows-gifs">Tv Shows GIFs</a>
         </div>
       </div>
 
@@ -172,19 +163,17 @@
 
     <footer>Made with intention, not pressure 💌</footer>
 
-    <!-- Hidden iframe so Formspree doesn't redirect the page -->
+    <!-- Hidden Formspree email sender -->
     <iframe name="notify_iframe" style="display:none;"></iframe>
-
-    <!-- Hidden form to email Jose via Formspree -->
     <form id="notifyForm"
           action="https://formspree.io/f/xvzqepyk"
           method="POST"
           target="notify_iframe"
           style="display:none;">
-      <input type="hidden" name="_subject" id="fs_subject" value="" />
-      <input type="hidden" name="choice" id="fs_choice" value="" />
-      <input type="hidden" name="page" id="fs_page" value="" />
-      <input type="hidden" name="time" id="fs_time" value="" />
+      <input type="hidden" name="_subject" id="fs_subject">
+      <input type="hidden" name="choice" id="fs_choice">
+      <input type="hidden" name="page" id="fs_page">
+      <input type="hidden" name="time" id="fs_time">
     </form>
   </main>
 
@@ -197,18 +186,18 @@
     const resultText = document.getElementById("resultText");
     const hint = document.getElementById("hint");
 
-    const YES_MESSAGE = "Excelente elección. La mejor que has hecho en tu vida. El 14 de febrero vamos a celebrar y la pasaremos bonito. Más información sobre la cita se te hará llegar por mensaje. Que tengas un bonito día😉💝";
-    const NO_MESSAGE  = "All good. Thank you for being honest.";
+    const YES_MESSAGE =
+      "Excelente elección. La mejor que has hecho en tu vida. El 14 de febrero vamos a celebrar y la pasaremos bonito. Más información sobre la cita se te hará llegar por mensaje. Que tengas un bonito día😉💝";
 
-    // Confetti
-    function celebrate() {
-      if (typeof confetti !== "function") return;
-      confetti({ particleCount: 120, spread: 85, origin: { y: 0.62 } });
-      setTimeout(() => confetti({ particleCount: 80, spread: 70, origin: { y: 0.62 } }), 180);
+    const NO_MESSAGE =
+      "All good. Thank you for being honest.";
+
+    function celebrate(){
+      confetti({ particleCount:120, spread:85, origin:{ y:0.6 }});
+      setTimeout(()=>confetti({ particleCount:80, spread:70, origin:{ y:0.6 }}),200);
     }
 
-    // ✅ Email notification via hidden Formspree form (most reliable on GitHub Pages)
-    function notify(choice) {
+    function notify(choice){
       document.getElementById("fs_subject").value = `Valentine response: ${choice}`;
       document.getElementById("fs_choice").value = choice;
       document.getElementById("fs_page").value = window.location.href;
@@ -216,72 +205,63 @@
       document.getElementById("notifyForm").submit();
     }
 
-    function showYes() {
-      result.style.display = "block";
-      yesGif.style.display = "block";
-      noGif.style.display = "none";
-      resultText.innerHTML = "❤️ " + YES_MESSAGE;
+    function showYes(){
+      result.style.display="block";
+      yesGif.style.display="block";
+      noGif.style.display="none";
+      resultText.textContent = "❤️ " + YES_MESSAGE;
     }
 
-    function showNo() {
-      result.style.display = "block";
-      noGif.style.display = "block";
-      yesGif.style.display = "none";
-      resultText.innerHTML = "😔 " + NO_MESSAGE;
+    function showNo(){
+      result.style.display="block";
+      noGif.style.display="block";
+      yesGif.style.display="none";
+      resultText.textContent = "😔 " + NO_MESSAGE;
     }
 
-    // YES click → confetti + GIF + email notify
-    yesBtn.addEventListener("click", () => {
+    yesBtn.addEventListener("click", ()=>{
       showYes();
       celebrate();
-      hint.textContent = "";
+      hint.textContent="";
       notify("Yes");
     });
 
-    // ✅ NO button dodges 5 times; 6th click shows sad GIF + email notify
     let dodgeCount = 0;
     const MAX_DODGES = 5;
 
-    function dodge() {
-      const x = Math.random() * 220 - 110;
-      const y = Math.random() * 90 - 45;
+    function dodge(){
+      const x=Math.random()*220-110;
+      const y=Math.random()*90-45;
       noBtn.classList.add("moving");
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-      setTimeout(() => noBtn.classList.remove("moving"), 200);
-
-      const remaining = MAX_DODGES - dodgeCount;
-      hint.textContent = remaining > 0
-        ? `😅 Are you sure? (${remaining} more…)`
+      noBtn.style.transform=`translate(${x}px,${y}px)`;
+      setTimeout(()=>noBtn.classList.remove("moving"),200);
+      hint.textContent = dodgeCount < MAX_DODGES
+        ? `😅 Are you sure? (${MAX_DODGES - dodgeCount} more…)`
         : "Okay okay — No is allowed 😄";
     }
 
-    // Desktop hover = dodge (until limit)
-    noBtn.addEventListener("mouseenter", () => {
-      if (dodgeCount < MAX_DODGES) {
+    noBtn.addEventListener("mouseenter", ()=>{
+      if(dodgeCount < MAX_DODGES){
         dodgeCount++;
         dodge();
       }
     });
 
-    // Mobile tap attempt = dodge (until limit)
-    noBtn.addEventListener("touchstart", (e) => {
-      if (dodgeCount < MAX_DODGES) {
-        e.preventDefault(); // block the click
+    noBtn.addEventListener("touchstart", e=>{
+      if(dodgeCount < MAX_DODGES){
+        e.preventDefault();
         dodgeCount++;
         dodge();
       }
-    }, { passive: false });
+    },{passive:false});
 
-    // Final click — ONLY after 5 dodges
-    noBtn.addEventListener("click", () => {
-      if (dodgeCount < MAX_DODGES) {
-        // Block premature click and count it as a dodge attempt
+    noBtn.addEventListener("click", ()=>{
+      if(dodgeCount < MAX_DODGES){
         dodgeCount++;
         dodge();
         return;
       }
-      // ✅ Sixth click: show sad GIF + notify
-      noBtn.style.transform = "translate(0,0)";
+      noBtn.style.transform="translate(0,0)";
       showNo();
       notify("No");
     });
