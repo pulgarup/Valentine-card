@@ -50,7 +50,6 @@
       text-align:center;
     }
 
-    /* ===== Stage ===== */
     .tapHint{
       color:var(--muted);
       font-size:13px;
@@ -61,10 +60,10 @@
       position:relative;
       width:min(560px, 100%);
       margin:0 auto;
-      height:560px; /* enough space for letter to slide out on phones */
+      height:560px;
     }
 
-    /* ===== Envelope (more realistic) ===== */
+    /* ===== Envelope ===== */
     .envelope{
       position:absolute;
       left:50%;
@@ -77,6 +76,7 @@
       user-select:none;
       -webkit-tap-highlight-color: transparent;
       overflow:hidden;
+      z-index:10; /* ✅ make sure envelope is on top */
 
       background:
         radial-gradient(circle at 20% 18%, rgba(190,18,60,.10), rgba(190,18,60,0) 52%),
@@ -86,7 +86,6 @@
       box-shadow:0 18px 42px rgba(2,6,23,.12);
     }
 
-    /* subtle heart texture */
     .envelope::before{
       content:"";
       position:absolute;
@@ -101,7 +100,6 @@
       z-index:0;
     }
 
-    /* name on envelope */
     .toName{
       position:absolute;
       top:22px;
@@ -116,7 +114,6 @@
       white-space:nowrap;
     }
 
-    /* pocket */
     .pocket{
       position:absolute;
       left:-12%;
@@ -147,7 +144,6 @@
       border-color: transparent rgba(254,205,211,.78) transparent transparent;
     }
 
-    /* flap (real opening) */
     .flap{
       position:absolute;
       top:-10px;
@@ -164,7 +160,6 @@
       filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
     }
 
-    /* wax seal stays on envelope (never blocks letter) */
     .seal{
       position:absolute;
       left:50%;
@@ -198,26 +193,28 @@
       text-shadow:0 1px 2px rgba(0,0,0,.35);
     }
 
-    /* ===== Letter that slides out (real reveal) ===== */
+    /* ===== Letter slides out ===== */
     .letterOut{
       position:absolute;
       left:50%;
       bottom:46px;
-      transform:translateX(-50%) translateY(220px); /* hidden initially */
+      transform:translateX(-50%) translateY(220px);
       width:min(680px, 94vw);
-      transition: transform .95s ease;
+      transition: transform .95s ease, opacity .5s ease;
       z-index:9;
       opacity:0;
+
+      pointer-events:none; /* ✅ critical fix: don't steal taps */
     }
 
-    /* When opened: flap flips + letter slides up */
     .open .flap{ transform: rotateX(180deg); }
     .open .letterOut{
       transform:translateX(-50%) translateY(-250px);
       opacity:1;
+      pointer-events:auto; /* ✅ becomes clickable after open */
     }
 
-    /* ===== Letter page design ===== */
+    /* ===== Letter page ===== */
     .letterPage{
       background:
         radial-gradient(circle at 18% 18%, rgba(225,29,72,.05), transparent 52%),
@@ -232,7 +229,6 @@
       padding:26px 22px 22px;
     }
 
-    /* tulips pinned to corners OUTSIDE text area */
     .tulip{
       position:absolute;
       font-size:30px;
@@ -245,13 +241,10 @@
     .t3{ bottom:10px; left:12px; transform:rotate(8deg); }
     .t4{ bottom:10px; right:12px; transform:rotate(-8deg); }
 
-    /* safe padding region so text never overlaps tulips */
     .textArea{
-      padding:14px 22px; /* inner padding */
+      padding:14px 22px;
       border-radius:14px;
-      background: rgba(255,255,255,.70);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      background: rgba(255,255,255,.72);
       border:1px solid rgba(226,232,240,.65);
     }
 
@@ -278,7 +271,7 @@
       line-height:1.65;
       color:#334155;
       margin:0 0 14px;
-      white-space:pre-line; /* respects line breaks */
+      white-space:pre-line;
     }
 
     .question{
@@ -373,7 +366,7 @@
   <main class="card">
     <p class="tapHint">Tap to open 💌</p>
 
-    <div class="scene">
+    <div class="scene" id="scene">
       <!-- Envelope -->
       <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
         <div class="toName">Jaymis</div>
@@ -397,7 +390,7 @@
             <div class="title">To Jaymis</div>
             <div class="withLove">Con cariño,</div>
 
-            <div class="sub" id="spanishText">
+            <div class="sub">
 Me gusta cuando compartimos y disfruto estar contigo.
 Valoro esos momentos cuando salimos tranquilos, conversamos y hacemos cosas nuevas juntos.
 
@@ -405,7 +398,7 @@ Quiero que sepas que aquí hay alguien que te aprecia, te respeta, y disfruta tu
             </div>
 
             <p class="question">
-              <strong>Jaymis</strong>, Would you be my Valentine and do me the honor of accompanying me to dinner on Valentine’s Day? 💝
+              <strong>Jaymis</strong>, would you let me take you out on Valentine’s Day? 💝
             </p>
             <p class="soft">No pressure — just honesty.</p>
 
@@ -446,21 +439,17 @@ Quiero que sepas que aquí hay alguien que te aprecia, te respeta, y disfruta tu
   <script>
     // ===== Open envelope + slide letter out =====
     const envelope = document.getElementById("envelope");
-    const letterOut = document.getElementById("letterOut");
+    const scene = document.getElementById("scene");
 
     let opened = false;
     function openEnvelope(){
       if(opened) return;
       opened = true;
-      envelope.classList.add("open");
-      // letterOut is separate; we just fade/slide it in via CSS when envelope is open:
-      // We'll add the 'open' class to the envelope AND also to the body container via parent:
-      envelope.parentElement.classList.add("open");
-      // Ensure Tenor embed can render when revealed
-      setTimeout(()=>{ if(window.Tenor){} }, 600);
+      scene.classList.add("open"); // ✅ drives the animation
     }
 
     envelope.addEventListener("click", openEnvelope);
+    envelope.addEventListener("touchstart", openEnvelope, { passive: true });
     envelope.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") openEnvelope();
     });
@@ -506,7 +495,7 @@ Quiero que sepas que aquí hay alguien que te aprecia, te respeta, y disfruta tu
       hint.textContent = "";
     });
 
-    // Keep No button behavior: dodge 5 times; 6th click works
+    // No button: dodge 5 times; 6th click shows GIF
     let dodgeCount = 0;
     const MAX_DODGES = 5;
 
