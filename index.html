@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>For Jaymis 💌</title>
 
+  <!-- Handwritten font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
@@ -21,7 +24,6 @@
       --accent2:#e11d48;
       --line:#e2e8f0;
       --shadow: 0 22px 55px rgba(2,6,23,.12);
-      --radius: 22px;
     }
 
     *{box-sizing:border-box}
@@ -38,30 +40,127 @@
     }
 
     .card{
-      width:min(720px,100%);
+      width:min(760px,100%);
       background:white;
       border-radius:22px;
-      padding:32px;
+      padding:26px 22px;
       box-shadow:var(--shadow);
-      text-align:center;
       border:1px solid rgba(226,232,240,.9);
+      text-align:center;
     }
 
-    h1{margin:0 0 10px}
+    /* ===== Envelope ===== */
+    .stage{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+    }
+
+    .tapHint{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .envelopeWrap{
+      width:min(420px,92%);
+      height:260px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+    }
+
+    .envelope{
+      width:100%;
+      height:190px;
+      position:relative;
+      border-radius:16px;
+      background:white;
+      border:1px solid rgba(226,232,240,.95);
+      box-shadow:0 18px 34px rgba(2,6,23,.1);
+      cursor:pointer;
+      overflow:hidden;
+    }
+
+    /* Name on front */
+    .toName{
+      position:absolute;
+      top:78px;
+      left:50%;
+      transform:translateX(-50%);
+      font-family:"Dancing Script", cursive;
+      font-size:36px;
+      color:#be123c;
+      pointer-events:none;
+      z-index:5;
+    }
+
+    .flap{
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      border-left:210px solid transparent;
+      border-right:210px solid transparent;
+      border-top:120px solid rgba(190,18,60,.18);
+      transform-origin:top center;
+      transition:transform .6s ease;
+    }
+
+    .seal{
+      position:absolute;
+      top:92px;
+      left:50%;
+      transform:translateX(-50%);
+      width:48px;
+      height:48px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 30%, #fff, #e11d48);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-weight:900;
+      box-shadow:0 10px 18px rgba(2,6,23,.15);
+      transition:opacity .4s ease;
+      z-index:6;
+    }
+
+    .letter{
+      position:absolute;
+      bottom:16px;
+      width:86%;
+      height:170px;
+      background:white;
+      border-radius:16px;
+      border:1px solid rgba(226,232,240,.95);
+      padding:16px;
+      transform:translateY(54px);
+      transition:transform .75s ease;
+      text-align:left;
+    }
+
+    .open .flap{ transform:rotateX(180deg); }
+    .open .letter{ transform:translateY(-74px); }
+    .open .seal{ opacity:.3; }
+
+    /* ===== Invitation ===== */
+    .content{ display:none; }
+    .content.show{ display:block; }
+
+    h1{ margin:12px 0 10px; }
     .sub{
       color:var(--muted);
-      margin:0 0 22px;
-      line-height:1.7;
       max-width:60ch;
-      margin-left:auto;
-      margin-right:auto;
+      margin:0 auto 18px;
+      line-height:1.7;
     }
 
     .actions{
       display:flex;
       gap:14px;
       justify-content:center;
-      margin-top:20px;
+      margin-top:18px;
       flex-wrap:wrap;
     }
 
@@ -72,207 +171,116 @@
       font-size:16px;
       cursor:pointer;
       border:none;
-      user-select:none;
-      transition:transform .14s ease, box-shadow .14s ease;
-    }
-    .btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(2,6,23,.1); }
-
-    .yes{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:white;
     }
 
-    .no{
-      background:#f1f5f9;
-      border:1px solid rgba(226,232,240,.95);
-      position:relative;
-    }
+    .yes{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
+    .no{ background:#f1f5f9; position:relative; }
 
-    .no.moving{ transition:transform .18s ease; }
-
-    .hint{
-      margin-top:10px;
-      font-size:13px;
-      color:var(--muted);
-      min-height:18px;
-    }
+    .hint{ font-size:13px; color:var(--muted); min-height:18px; margin-top:8px; }
 
     .result{
       display:none;
-      margin-top:24px;
+      margin-top:20px;
       padding:18px;
       border-radius:16px;
-      background:rgba(248,250,252,.9);
+      background:#f8fafc;
       border:1px solid rgba(226,232,240,.95);
       text-align:left;
     }
 
     #resultText{
-      margin:14px auto 0;
-      font-weight:650;
-      line-height:1.65;
       max-width:62ch;
-      color:var(--text);
-      white-space:normal;
-      word-break:break-word;
+      margin:14px auto 0;
+      line-height:1.65;
+      font-weight:650;
     }
 
     footer{
-      margin-top:24px;
+      margin-top:18px;
       font-size:12px;
       color:var(--muted);
-      text-align:center;
     }
   </style>
 </head>
 
 <body>
   <main class="card">
-    <h1>Jaymis, I have a question.</h1>
+    <!-- Envelope -->
+    <section class="stage" id="stage">
+      <p class="tapHint">Tap to open 💌</p>
 
-    <p class="sub">
-      Nothing complicated — I want you to choose sincerely and without pressure.
-    </p>
+      <div class="envelopeWrap">
+        <div class="envelope" id="envelope">
+          <div class="toName">Jaymis</div>
+          <div class="flap"></div>
+          <div class="seal">J</div>
 
-    <p style="line-height:1.7">
-      <strong>Jaymis Figueroa</strong>, would you do me the honor of being my Valentine?
-      <br><span style="color:#64748b">— Jose Pulgar</span>
-    </p>
-
-    <div class="actions">
-      <button class="btn yes" id="yesBtn">Yes 💘</button>
-      <button class="btn no" id="noBtn">No 🙈</button>
-    </div>
-
-    <div class="hint" id="hint"></div>
-
-    <section class="result" id="result">
-
-      <!-- YES GIF -->
-      <div id="yesGif" style="display:none">
-        <div class="tenor-gif-embed"
-          data-postid="15931245853859273114"
-          data-share-method="host"
-          data-aspect-ratio="1"
-          data-width="100%">
+          <div class="letter">
+            <p style="margin:0;font-weight:700;">To: Jaymis</p>
+            <p style="margin:4px 0;">A small question…</p>
+            <p style="margin:0;color:#64748b;">— Jose</p>
+          </div>
         </div>
       </div>
-
-      <!-- NO GIF -->
-      <div id="noGif" style="display:none">
-        <div class="tenor-gif-embed"
-          data-postid="14859179"
-          data-share-method="host"
-          data-aspect-ratio="2.1"
-          data-width="100%">
-        </div>
-      </div>
-
-      <p id="resultText"></p>
     </section>
 
-    <footer>Made with intention, not pressure 💌</footer>
+    <!-- Invitation -->
+    <section class="content" id="content">
+      <h1>Jaymis, I have a question.</h1>
+      <p class="sub">
+        Nothing complicated — I want you to choose sincerely and with your heart.
+      </p>
 
-    <!-- Formspree email notification -->
-    <iframe name="notify_iframe" style="display:none;"></iframe>
-    <form id="notifyForm"
-          action="https://formspree.io/f/xvzqepyk"
-          method="POST"
-          target="notify_iframe"
-          style="display:none;">
-      <input type="hidden" name="_subject" id="fs_subject">
-      <input type="hidden" name="choice" id="fs_choice">
-      <input type="hidden" name="page" id="fs_page">
-      <input type="hidden" name="time" id="fs_time">
-    </form>
+      <p>
+        <strong>Jaymis Figueroa</strong>, would you do me the honor of being my Valentine?
+        <br><span style="color:#64748b">— Jose Pulgar</span>
+      </p>
+
+      <div class="actions">
+        <button class="btn yes" id="yesBtn">Yes 💘</button>
+        <button class="btn no" id="noBtn">No 🙈</button>
+      </div>
+
+      <div class="hint" id="hint"></div>
+
+      <section class="result" id="result">
+        <div id="yesGif" style="display:none">
+          <div class="tenor-gif-embed" data-postid="15931245853859273114"></div>
+        </div>
+        <div id="noGif" style="display:none">
+          <div class="tenor-gif-embed" data-postid="14859179"></div>
+        </div>
+        <p id="resultText"></p>
+      </section>
+
+      <footer>Made with intention, not pressure 💌</footer>
+
+      <!-- Formspree -->
+      <iframe name="notify_iframe" style="display:none;"></iframe>
+      <form id="notifyForm"
+            action="https://formspree.io/f/xvzqepyk"
+            method="POST"
+            target="notify_iframe"
+            style="display:none;">
+        <input type="hidden" name="_subject" id="fs_subject">
+        <input type="hidden" name="choice" id="fs_choice">
+        <input type="hidden" name="page" id="fs_page">
+        <input type="hidden" name="time" id="fs_time">
+      </form>
+    </section>
   </main>
 
   <script>
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const result = document.getElementById("result");
-    const yesGif = document.getElementById("yesGif");
-    const noGif = document.getElementById("noGif");
-    const resultText = document.getElementById("resultText");
-    const hint = document.getElementById("hint");
+    const envelope = document.getElementById("envelope");
+    const stage = document.getElementById("stage");
+    const content = document.getElementById("content");
 
-    const YES_MESSAGE =
-      "Excelente elección. La mejor que has hecho en tu vida. El 14 de febrero vamos a celebrar y la pasaremos bonito. Te llegarán flores y un mensaje con información sobre la cita en unos segundos. Que tengas un bonito día😉💝";
-
-    const NO_MESSAGE = "All good. Thank you for being honest.";
-
-    function celebrate(){
-      confetti({ particleCount:120, spread:85, origin:{ y:0.6 }});
-      setTimeout(()=>confetti({ particleCount:80, spread:70, origin:{ y:0.6 }}),200);
-    }
-
-    function notify(choice){
-      document.getElementById("fs_subject").value = `Valentine response: ${choice}`;
-      document.getElementById("fs_choice").value = choice;
-      document.getElementById("fs_page").value = window.location.href;
-      document.getElementById("fs_time").value = new Date().toLocaleString();
-      document.getElementById("notifyForm").submit();
-    }
-
-    function showYes(){
-      result.style.display="block";
-      yesGif.style.display="block";
-      noGif.style.display="none";
-      resultText.textContent = "❤️ " + YES_MESSAGE;
-    }
-
-    function showNo(){
-      result.style.display="block";
-      noGif.style.display="block";
-      yesGif.style.display="none";
-      resultText.textContent = "😔 " + NO_MESSAGE;
-    }
-
-    yesBtn.addEventListener("click", ()=>{
-      showYes();
-      celebrate();
-      hint.textContent="";
-      notify("Yes");
-    });
-
-    let dodgeCount = 0;
-    const MAX_DODGES = 5;
-
-    function dodge(){
-      const x=Math.random()*220-110;
-      const y=Math.random()*90-45;
-      noBtn.classList.add("moving");
-      noBtn.style.transform=`translate(${x}px,${y}px)`;
-      setTimeout(()=>noBtn.classList.remove("moving"),200);
-      hint.textContent = dodgeCount < MAX_DODGES
-        ? `😅 Are you sure? (${MAX_DODGES - dodgeCount} more…)`
-        : "Okay okay — No is allowed 😄";
-    }
-
-    noBtn.addEventListener("mouseenter", ()=>{
-      if(dodgeCount < MAX_DODGES){
-        dodgeCount++;
-        dodge();
-      }
-    });
-
-    noBtn.addEventListener("touchstart", e=>{
-      if(dodgeCount < MAX_DODGES){
-        e.preventDefault();
-        dodgeCount++;
-        dodge();
-      }
-    },{passive:false});
-
-    noBtn.addEventListener("click", ()=>{
-      if(dodgeCount < MAX_DODGES){
-        dodgeCount++;
-        dodge();
-        return;
-      }
-      noBtn.style.transform="translate(0,0)";
-      showNo();
-      notify("No");
+    envelope.addEventListener("click", ()=>{
+      envelope.classList.add("open");
+      setTimeout(()=>{
+        stage.style.display="none";
+        content.classList.add("show");
+      },600);
     });
   </script>
 </body>
