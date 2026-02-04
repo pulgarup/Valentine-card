@@ -47,8 +47,15 @@
       border:1px solid rgba(226,232,240,.9);
     }
 
-    h1{margin:0 0 8px}
-    .sub{color:var(--muted); margin:0 0 18px; line-height:1.6}
+    h1{margin:0 0 10px}
+    .sub{
+      color:var(--muted);
+      margin:0 0 22px;
+      line-height:1.7;
+      max-width:60ch;
+      margin-left:auto;
+      margin-right:auto;
+    }
 
     .actions{
       display:flex;
@@ -121,8 +128,11 @@
 
 <body>
   <main class="card">
-    <h1>Jaymis, I have a question…</h1>
-    <p class="sub">Nothing complicated — just something sincere.</p>
+    <h1>Jaymis, I have a question.</h1>
+
+    <p class="sub">
+      Nothing complicated — I want you to choose sincerely and with your heart.
+    </p>
 
     <p style="line-height:1.7">
       <strong>Jaymis Figueroa</strong>, would you do me the honor of being my Valentine?
@@ -163,7 +173,7 @@
 
     <footer>Made with intention, not pressure 💌</footer>
 
-    <!-- Hidden Formspree email sender -->
+    <!-- Formspree email notification -->
     <iframe name="notify_iframe" style="display:none;"></iframe>
     <form id="notifyForm"
           action="https://formspree.io/f/xvzqepyk"
@@ -189,8 +199,7 @@
     const YES_MESSAGE =
       "Excelente elección. La mejor que has hecho en tu vida. El 14 de febrero vamos a celebrar y la pasaremos bonito. Más información sobre la cita se te hará llegar por mensaje. Que tengas un bonito día😉💝";
 
-    const NO_MESSAGE =
-      "All good. Thank you for being honest.";
+    const NO_MESSAGE = "All good. Thank you for being honest.";
 
     function celebrate(){
       confetti({ particleCount:120, spread:85, origin:{ y:0.6 }});
