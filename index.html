@@ -40,7 +40,7 @@
     }
 
     .card{
-      width:min(760px,100%);
+      width:min(820px,100%);
       background:white;
       border-radius:22px;
       padding:26px 22px;
@@ -50,22 +50,24 @@
       overflow:hidden;
     }
 
-    /* ===== Envelope ===== */
+    /* ===== Envelope Stage ===== */
     .stage{
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:14px;
+      padding:10px 0 8px;
     }
 
     .tapHint{
       color:var(--muted);
       font-size:13px;
+      margin:0;
     }
 
     .envelopeWrap{
-      width:min(420px,92%);
-      height:260px;
+      width:min(460px,92%);
+      height:280px;
       display:flex;
       align-items:flex-end;
       justify-content:center;
@@ -73,88 +75,109 @@
 
     .envelope{
       width:100%;
-      height:190px;
+      height:210px;
       position:relative;
-      border-radius:16px;
+      border-radius:18px;
       background:white;
       border:1px solid rgba(226,232,240,.95);
-      box-shadow:0 18px 34px rgba(2,6,23,.1);
+      box-shadow:0 18px 34px rgba(2,6,23,.10);
       cursor:pointer;
       overflow:hidden;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* Handwritten name */
+    /* Handwritten name (front of envelope) */
     .toName{
       position:absolute;
-      top:42px;
+      top:34px;
       left:50%;
       transform:translateX(-50%);
       font-family:"Dancing Script", cursive;
-      font-size:38px;
+      font-size:40px;
       color:#be123c;
       pointer-events:none;
       z-index:10;
-      text-shadow:0 2px 6px rgba(0,0,0,.08);
+      text-shadow:0 2px 8px rgba(0,0,0,.08);
     }
 
-    /* Flap */
+    /* Top flap */
     .flap{
       position:absolute;
       top:0;
       left:0;
       right:0;
-      border-left:210px solid transparent;
-      border-right:210px solid transparent;
-      border-top:120px solid rgba(190,18,60,.18);
+      border-left:230px solid transparent;
+      border-right:230px solid transparent;
+      border-top:130px solid rgba(190,18,60,.16);
       transform-origin:top center;
       transition:transform .6s ease;
       z-index:4;
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,.06));
     }
 
-    /* Wax seal */
+    /* Smaller, wax-like seal */
     .seal{
       position:absolute;
-      top:112px;
+      top:128px;            /* moved down a bit */
       left:50%;
       transform:translateX(-50%);
-      width:48px;
-      height:48px;
+      width:36px;           /* smaller */
+      height:36px;          /* smaller */
       border-radius:999px;
-      background:radial-gradient(circle at 30% 30%, #fff, #e11d48);
+      z-index:8;
+      pointer-events:none;
+
+      /* Wax texture + shine */
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.85), rgba(255,255,255,0) 45%),
+        radial-gradient(circle at 70% 75%, rgba(0,0,0,.12), rgba(0,0,0,0) 55%),
+        conic-gradient(from 210deg, #8b0f2c, #be123c, #e11d48, #be123c, #8b0f2c);
+      box-shadow:
+        0 10px 18px rgba(2,6,23,.14),
+        inset 0 2px 6px rgba(255,255,255,.35),
+        inset 0 -6px 10px rgba(0,0,0,.18);
+      border:1px solid rgba(190,18,60,.28);
+    }
+
+    .seal::after{
+      content:"J";
+      position:absolute;
+      inset:0;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:white;
+      color:rgba(255,255,255,.92);
       font-weight:900;
-      box-shadow:0 10px 18px rgba(2,6,23,.15);
-      transition:opacity .4s ease;
-      z-index:8;
+      font-size:15px;
+      letter-spacing:.02em;
+      text-shadow: 0 1px 2px rgba(0,0,0,.22);
     }
 
-    /* Letter preview */
+    /* Letter preview inside */
     .letter{
       position:absolute;
-      bottom:14px;
+      bottom:16px;
       width:86%;
-      height:170px;
+      height:178px;
       background:white;
       border-radius:16px;
       border:1px solid rgba(226,232,240,.95);
       padding:16px;
-      transform:translateY(64px);
+      transform:translateY(72px);
       transition:transform .75s ease;
       text-align:left;
       opacity:.92;
-      filter:blur(0.3px);
+      filter:blur(0.35px);
       z-index:2;
     }
 
     .open .flap{ transform:rotateX(180deg); }
-    .open .letter{ transform:translateY(-74px); }
-    .open .seal{ opacity:.3; }
+    .open .letter{ transform:translateY(-82px); }
+    .open .seal{ opacity:.35; transition:opacity .4s ease; }
 
-    /* ===== Invitation ===== */
-    .content{ display:none; }
+    /* ===== Invitation Content ===== */
+    .content{ display:none; padding:8px 6px 2px; }
     .content.show{ display:block; }
 
     h1{ margin:12px 0 10px; }
@@ -181,23 +204,22 @@
       font-size:16px;
       cursor:pointer;
       border:none;
+      user-select:none;
+      transition:transform .14s ease, box-shadow .14s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .yes{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:white;
-    }
+    .btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(2,6,23,.1); }
 
-    .no{
-      background:#f1f5f9;
-      position:relative;
-    }
+    .yes{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
+    .no{ background:#f1f5f9; border:1px solid rgba(226,232,240,.95); position:relative; }
+    .no.moving{ transition:transform .18s ease; }
 
     .hint{
       font-size:13px;
       color:var(--muted);
       min-height:18px;
-      margin-top:8px;
+      margin-top:10px;
     }
 
     .result{
@@ -205,7 +227,7 @@
       margin-top:20px;
       padding:18px;
       border-radius:16px;
-      background:#f8fafc;
+      background:rgba(248,250,252,.92);
       border:1px solid rgba(226,232,240,.95);
       text-align:left;
     }
@@ -215,12 +237,16 @@
       margin:14px auto 0;
       line-height:1.65;
       font-weight:650;
+      color:var(--text);
+      white-space:normal;
+      word-break:break-word;
     }
 
     footer{
       margin-top:18px;
       font-size:12px;
       color:var(--muted);
+      text-align:center;
     }
   </style>
 </head>
@@ -232,15 +258,15 @@
       <p class="tapHint">Tap to open 💌</p>
 
       <div class="envelopeWrap">
-        <div class="envelope" id="envelope">
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
           <div class="toName">Jaymis</div>
           <div class="flap"></div>
-          <div class="seal">J</div>
+          <div class="seal" aria-hidden="true"></div>
 
-          <div class="letter">
-            <p style="margin:0;font-weight:700;">To: Jaymis</p>
-            <p style="margin:4px 0;">A small question…</p>
-            <p style="margin:0;color:#64748b;">— Jose</p>
+          <div class="letter" aria-hidden="true">
+            <p style="margin:0;font-weight:800;">To: Jaymis</p>
+            <p style="margin:6px 0 0;">A small question…</p>
+            <p style="margin:12px 0 0;color:#64748b;font-weight:650;">— Jose</p>
           </div>
         </div>
       </div>
@@ -249,35 +275,35 @@
     <!-- Invitation -->
     <section class="content" id="content">
       <h1>Jaymis, I have a question.</h1>
-      <p class="sub">
-        Nothing complicated — I want you to choose sincerely and with your heart.
-      </p>
+      <p class="sub">Nothing complicated — I want you to choose sincerely and with your heart.</p>
 
-      <p>
+      <p style="line-height:1.7; margin:0;">
         <strong>Jaymis Figueroa</strong>, would you do me the honor of being my Valentine?
         <br><span style="color:#64748b">— Jose Pulgar</span>
       </p>
 
       <div class="actions">
-        <button class="btn yes" id="yesBtn">Yes 💘</button>
-        <button class="btn no" id="noBtn">No 🙈</button>
+        <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
+        <button class="btn no" id="noBtn" type="button">No 🙈</button>
       </div>
 
       <div class="hint" id="hint"></div>
 
-      <section class="result" id="result">
+      <section class="result" id="result" aria-live="polite">
         <div id="yesGif" style="display:none">
-          <div class="tenor-gif-embed" data-postid="15931245853859273114"></div>
+          <div class="tenor-gif-embed" data-postid="15931245853859273114"
+               data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>
         </div>
         <div id="noGif" style="display:none">
-          <div class="tenor-gif-embed" data-postid="14859179"></div>
+          <div class="tenor-gif-embed" data-postid="14859179"
+               data-share-method="host" data-aspect-ratio="2.1" data-width="100%"></div>
         </div>
         <p id="resultText"></p>
       </section>
 
       <footer>Made with intention, not pressure 💌</footer>
 
-      <!-- Formspree -->
+      <!-- Formspree email notification -->
       <iframe name="notify_iframe" style="display:none;"></iframe>
       <form id="notifyForm"
             action="https://formspree.io/f/xvzqepyk"
@@ -293,16 +319,117 @@
   </main>
 
   <script>
+    // ===== Envelope open =====
     const envelope = document.getElementById("envelope");
     const stage = document.getElementById("stage");
     const content = document.getElementById("content");
 
-    envelope.addEventListener("click", ()=>{
+    let opened = false;
+    function openEnvelope(){
+      if (opened) return;
+      opened = true;
       envelope.classList.add("open");
-      setTimeout(()=>{
-        stage.style.display="none";
+      setTimeout(() => {
+        stage.style.display = "none";
         content.classList.add("show");
-      },600);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 650);
+    }
+
+    envelope.addEventListener("click", openEnvelope);
+    envelope.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") openEnvelope();
+    });
+
+    // ===== Invitation logic =====
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const result = document.getElementById("result");
+    const yesGif = document.getElementById("yesGif");
+    const noGif = document.getElementById("noGif");
+    const resultText = document.getElementById("resultText");
+    const hint = document.getElementById("hint");
+
+    const YES_MESSAGE =
+      "Excelente elección. La mejor que has hecho en tu vida. El 14 de febrero vamos a celebrar y la pasaremos bonito. Más información sobre la cita se te hará llegar por mensaje. Que tengas un bonito día😉💝";
+
+    const NO_MESSAGE = "All good. Thank you for being honest.";
+
+    function celebrate(){
+      if (typeof confetti !== "function") return;
+      confetti({ particleCount: 120, spread: 85, origin: { y: 0.6 }});
+      setTimeout(() => confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 }}), 200);
+    }
+
+    function notify(choice){
+      document.getElementById("fs_subject").value = `Valentine response: ${choice}`;
+      document.getElementById("fs_choice").value = choice;
+      document.getElementById("fs_page").value = window.location.href;
+      document.getElementById("fs_time").value = new Date().toLocaleString();
+      document.getElementById("notifyForm").submit();
+    }
+
+    function showYes(){
+      result.style.display = "block";
+      yesGif.style.display = "block";
+      noGif.style.display = "none";
+      resultText.textContent = "❤️ " + YES_MESSAGE;
+    }
+
+    function showNo(){
+      result.style.display = "block";
+      noGif.style.display = "block";
+      yesGif.style.display = "none";
+      resultText.textContent = "😔 " + NO_MESSAGE;
+    }
+
+    yesBtn.addEventListener("click", () => {
+      showYes();
+      celebrate();
+      hint.textContent = "";
+      notify("Yes");
+    });
+
+    // No button dodges 5 times; 6th click shows the sad GIF
+    let dodgeCount = 0;
+    const MAX_DODGES = 5;
+
+    function dodge(){
+      const x = Math.random() * 220 - 110;
+      const y = Math.random() * 90 - 45;
+      noBtn.classList.add("moving");
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      setTimeout(() => noBtn.classList.remove("moving"), 200);
+
+      hint.textContent = dodgeCount < MAX_DODGES
+        ? `😅 Are you sure? (${MAX_DODGES - dodgeCount} more…)`
+        : "Okay okay — No is allowed 😄";
+    }
+
+    noBtn.addEventListener("mouseenter", () => {
+      if (dodgeCount < MAX_DODGES) {
+        dodgeCount++;
+        dodge();
+      }
+    });
+
+    noBtn.addEventListener("touchstart", (e) => {
+      if (dodgeCount < MAX_DODGES) {
+        e.preventDefault();
+        dodgeCount++;
+        dodge();
+      }
+    }, { passive:false });
+
+    noBtn.addEventListener("click", () => {
+      if (dodgeCount < MAX_DODGES) {
+        dodgeCount++;
+        dodge();
+        return;
+      }
+      noBtn.style.transform = "translate(0,0)";
+      showNo();
+      notify("No");
     });
   </script>
 </body>
