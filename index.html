@@ -1,561 +1,315 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>For Jaymis 💌</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>For Jaymis 💌</title>
 
-  <!-- Handwritten font -->
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script async src="https://tenor.com/embed.js"></script>
 
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root{
+  --accent:#be123c;
+  --accent2:#e11d48;
+  --muted:#475569;
+  --text:#0f172a;
+}
 
-  <!-- Tenor Embed -->
-  <script async src="https://tenor.com/embed.js"></script>
+body{
+  margin:0;
+  min-height:100vh;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  background:linear-gradient(135deg,#fff1f2,#f8fafc);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
 
-  <style>
-    :root{
-      --bg1:#fff1f2;
-      --bg2:#f8fafc;
-      --text:#0f172a;
-      --muted:#475569;
-      --accent:#be123c;
-      --accent2:#e11d48;
-      --line:#e2e8f0;
-      --shadow: 0 22px 55px rgba(2,6,23,.12);
+.card{
+  width:min(860px,100%);
+  background:white;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 22px 55px rgba(0,0,0,.12);
+}
 
-      --envBlush:#ffe4e6;
-      --envRose:#fecdd3;
-      --envPaper:#ffffff;
-      --wax:#a30f2f;
-    }
+/* ===== Envelope ===== */
+.stage{
+  text-align:center;
+}
 
-    *{box-sizing:border-box}
+.tapHint{
+  font-size:13px;
+  color:var(--muted);
+}
 
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
+.envelopeWrap{
+  width:min(520px,96%);
+  height:320px;
+  margin:auto;
+  display:flex;
+  align-items:flex-end;
+}
 
-    .card{
-      width:min(860px,100%);
-      background:white;
-      border-radius:22px;
-      padding:22px;
-      box-shadow:var(--shadow);
-      border:1px solid rgba(226,232,240,.9);
-      overflow:hidden;
-      text-align:center;
-    }
+.envelope{
+  width:100%;
+  height:240px;
+  background:linear-gradient(135deg,#ffe4e6,#ffffff);
+  border-radius:20px;
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+}
 
-    /* ===== Envelope Stage ===== */
-    .stage{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
-      padding:8px 0 10px;
-    }
+/* NAME */
+.toName{
+  position:absolute;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:"Dancing Script",cursive;
+  font-size:46px;
+  font-weight:700;
+  color:#9f1239;
+  z-index:10;
+}
 
-    .tapHint{
-      color:var(--muted);
-      font-size:13px;
-      margin:0;
-    }
+/* FLAP */
+.flap{
+  position:absolute;
+  top:-4px;
+  left:0;
+  right:0;
+  margin:auto;
+  width:0;height:0;
+  border-left:260px solid transparent;
+  border-right:260px solid transparent;
+  border-top:150px solid rgba(190,18,60,.15);
+  transform-origin:top;
+  transition:transform .6s ease;
+}
 
-    .envelopeWrap{
-      width:min(520px, 96%);
-      height:320px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-    }
+/* LETTER */
+.letter{
+  position:absolute;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%) translateY(100px);
+  width:88%;
+  height:170px;
+  background:white;
+  border-radius:16px;
+  padding:18px;
+  transition:.8s ease;
+  z-index:3;
+}
 
-    .envelope{
-      width:100%;
-      height:240px;
-      position:relative;
-      border-radius:20px;
-      cursor:pointer;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      transform: translateZ(0);
-      overflow:hidden;
+.toLine{
+  font-size:18px;
+  font-weight:900;
+  color:#0f172a;
+  letter-spacing:.02em;
+}
 
-      background:
-        radial-gradient(circle at 20% 18%, rgba(190,18,60,.10), rgba(190,18,60,0) 52%),
-        radial-gradient(circle at 82% 70%, rgba(190,18,60,.08), rgba(190,18,60,0) 55%),
-        linear-gradient(135deg, var(--envBlush), var(--envPaper));
-      border:1px solid rgba(226,232,240,.9);
-      box-shadow: 0 18px 42px rgba(2,6,23,.12);
-    }
+.sigLine{
+  margin-top:14px;
+  font-weight:700;
+  color:#475569;
+}
 
-    /* subtle heart pattern overlay */
-    .envelope::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background-image:
-        radial-gradient(circle at 12px 10px, rgba(190,18,60,.08) 2px, transparent 3px),
-        radial-gradient(circle at 34px 28px, rgba(190,18,60,.06) 2px, transparent 3px),
-        radial-gradient(circle at 56px 12px, rgba(190,18,60,.05) 2px, transparent 3px);
-      background-size: 70px 55px;
-      opacity:.35;
-      pointer-events:none;
-      z-index:0;
-    }
+/* SEAL */
+.seal{
+  position:absolute;
+  left:50%;
+  top:165px;
+  transform:translateX(-50%);
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#7b0823,#a30f2f);
+  box-shadow:inset 0 -6px 8px rgba(0,0,0,.3);
+  z-index:6;
+}
 
-    .pocket{
-      position:absolute;
-      left:-10%;
-      right:-10%;
-      bottom:-30px;
-      height:170px;
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(254,205,211,.95));
-      border-top:1px solid rgba(226,232,240,.85);
-      z-index:2;
-    }
+.seal::after{
+  content:"J";
+  color:white;
+  font-size:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+}
 
-    .foldLeft, .foldRight{
-      position:absolute;
-      bottom:0;
-      width:0; height:0;
-      border-style:solid;
-      z-index:3;
-      opacity:.95;
-    }
-    .foldLeft{
-      left:0;
-      border-width: 140px 0 0 260px;
-      border-color: transparent transparent transparent rgba(254,205,211,.75);
-    }
-    .foldRight{
-      right:0;
-      border-width: 140px 260px 0 0;
-      border-color: transparent rgba(254,205,211,.75) transparent transparent;
-    }
+/* OPEN */
+.open .flap{transform:rotateX(180deg);}
+.open .letter{transform:translateX(-50%) translateY(-90px);}
+.open .seal{opacity:.35}
 
-    .flap{
-      position:absolute;
-      top:-6px;
-      left:0;
-      right:0;
-      width:0;height:0;
-      margin:auto;
-      border-left: 260px solid transparent;
-      border-right:260px solid transparent;
-      border-top: 150px solid rgba(190,18,60,.13);
-      transform-origin: top center;
-      transition: transform .65s ease;
-      z-index:6;
-      filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
-    }
+/* ===== CONTENT ===== */
+.content{display:none;}
+.content.show{display:block;}
 
-    .toName{
-      position:absolute;
-      top:28px;
-      left:50%;
-      transform:translateX(-50%);
-      font-family:"Dancing Script", cursive;
-      font-size:44px;
-      color:#b1123a;
-      text-shadow:0 2px 10px rgba(0,0,0,.08);
-      pointer-events:none;
-      z-index:5;
-      opacity:.95;
-      white-space:nowrap;
-    }
+.sub{
+  max-width:62ch;
+  margin:0 auto 16px;
+  line-height:1.7;
+  text-align:left;
+  color:var(--muted);
+}
 
-    /* matte wax seal (smaller + moved down) */
-    .seal{
-      position:absolute;
-      left:50%;
-      top:160px;      /* moved down from 148 -> 160 */
-      transform:translateX(-50%);
-      width:24px;
-      height:24px;
-      border-radius:999px;
-      z-index:7;
-      pointer-events:none;
+.question{
+  max-width:62ch;
+  margin:auto;
+  font-size:16px;
+  line-height:1.7;
+  text-align:left;
+}
 
-      background:
-        radial-gradient(circle at 40% 40%, rgba(255,255,255,.08), rgba(255,255,255,0) 55%),
-        radial-gradient(circle at 70% 75%, rgba(0,0,0,.20), rgba(0,0,0,0) 60%),
-        linear-gradient(145deg, #7b0823, var(--wax));
-      box-shadow:
-        0 8px 14px rgba(2,6,23,.14),
-        inset 0 2px 6px rgba(255,255,255,.06),
-        inset 0 -6px 10px rgba(0,0,0,.24);
-      border:1px solid rgba(0,0,0,.09);
-    }
-    .seal::after{
-      content:"J";
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:rgba(255,255,255,.90);
-      font-weight:900;
-      font-size:11px;
-      text-shadow: 0 1px 2px rgba(0,0,0,.30);
-    }
+.soft{
+  margin-top:8px;
+  font-size:13px;
+  color:#64748b;
+}
 
-    /* letter preview inside (clearer + positioned higher) */
-    .letter{
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%) translateY(82px);
-      bottom:18px;
-      width:88%;
-      height:170px;
-      background:white;
-      border-radius:16px;
-      border:1px solid rgba(226,232,240,.92);
-      box-shadow: 0 10px 22px rgba(2,6,23,.10);
-      padding:16px;
-      text-align:left;
-      transition: transform .8s ease;
-      opacity:.92;
-      filter: blur(.15px);
-      z-index:1;
-    }
+.actions{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  margin-top:18px;
+}
 
-    .letter .toLine{
-      margin:0;
-      font-weight:900;
-      color:#0f172a;     /* darker for visibility */
-      font-size:15px;
-      letter-spacing:.01em;
-    }
+.btn{
+  padding:14px 20px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  border:none;
+}
 
-    .letter .noteLine{
-      margin:10px 0 0;
-      color:#475569;     /* readable, not washed out */
-      font-weight:650;
-      font-size:14px;
-    }
+.yes{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;}
+.no{background:#f1f5f9;}
 
-    .letter .sigLine{
-      margin:12px 0 0;
-      color:#64748b;
-      font-weight:700;
-      font-size:14px;
-    }
+.hint{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:10px;
+  min-height:18px;
+}
 
-    .open .flap{ transform: rotateX(180deg); }
-    .open .letter{ transform:translateX(-50%) translateY(-86px); }
-    .open .seal{ opacity:.35; transition:opacity .35s ease; }
+.result{
+  display:none;
+  margin-top:20px;
+}
 
-    /* ===== Invitation ===== */
-    .content{ display:none; padding:8px 10px 2px; }
-    .content.show{ display:block; }
-
-    h1{ margin:10px 0 10px; }
-
-    .sub{
-      color:var(--muted);
-      max-width:62ch;
-      margin:0 auto 16px;
-      line-height:1.75;
-      font-size:15px;
-      text-align:left;
-      white-space:normal;
-      word-break:break-word;
-    }
-
-    .question{
-      line-height:1.75;
-      font-size:16px;
-      color:var(--text);
-      max-width:62ch;
-      margin:0 auto;
-      text-align:left;
-    }
-
-    .sig{
-      color:#64748b;
-      margin:10px auto 0;
-      font-weight:650;
-      text-align:left;
-      max-width:62ch;
-    }
-
-    .actions{
-      display:flex;
-      gap:14px;
-      justify-content:center;
-      margin-top:18px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      padding:14px 20px;
-      border-radius:14px;
-      font-weight:800;
-      font-size:16px;
-      cursor:pointer;
-      border:none;
-      user-select:none;
-      transition:transform .14s ease, box-shadow .14s ease;
-      -webkit-tap-highlight-color: transparent;
-      min-width:140px;
-    }
-    .btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(2,6,23,.10); }
-
-    .yes{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
-    .no{ background:#f1f5f9; border:1px solid rgba(226,232,240,.95); position:relative; }
-    .no.moving{ transition:transform .18s ease; }
-
-    .hint{
-      font-size:13px;
-      color:var(--muted);
-      min-height:18px;
-      margin-top:10px;
-    }
-
-    .result{
-      display:none;
-      margin-top:20px;
-      padding:18px;
-      border-radius:16px;
-      background:rgba(248,250,252,.92);
-      border:1px solid rgba(226,232,240,.95);
-      text-align:left;
-    }
-
-    #resultText{
-      max-width:64ch;
-      margin:14px auto 0;
-      line-height:1.65;
-      font-weight:650;
-      color:var(--text);
-      white-space:normal;
-      word-break:break-word;
-    }
-
-    footer{
-      margin-top:16px;
-      font-size:12px;
-      color:var(--muted);
-      text-align:center;
-    }
-
-    @media (max-width: 420px){
-      .toName{ font-size:40px; }
-      .btn{ min-width:130px; }
-      .envelopeWrap{ height:300px; }
-      .envelope{ height:230px; }
-    }
-  </style>
+@media(max-width:420px){
+  .toName{font-size:40px}
+}
+</style>
 </head>
 
 <body>
-  <main class="card">
-    <!-- Envelope -->
-    <section class="stage" id="stage">
-      <p class="tapHint">Tap to open 💌</p>
+<main class="card">
 
-      <div class="envelopeWrap">
-        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
-          <div class="toName">Jaymis</div>
-          <div class="flap"></div>
-          <div class="seal" aria-hidden="true"></div>
+<section class="stage" id="stage">
+  <p class="tapHint">Tap to open 💌</p>
+  <div class="envelopeWrap">
+    <div class="envelope" id="envelope">
+      <div class="toName">Jaymis</div>
+      <div class="flap"></div>
+      <div class="seal"></div>
 
-          <div class="letter" aria-hidden="true">
-            <p class="toLine">To: Jaymis</p>
-            <p class="noteLine">💌</p>
-            <p class="sigLine">— Jose</p>
-          </div>
-
-          <div class="pocket"></div>
-          <div class="foldLeft"></div>
-          <div class="foldRight"></div>
-        </div>
+      <div class="letter">
+        <div class="toLine">To: Jaymis</div>
+        <div class="sigLine">— Jose</div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <!-- Invitation -->
-    <section class="content" id="content">
-      <h1>Jaymis, I have a question.</h1>
+<section class="content" id="content">
+  <div class="sub">
+    Me gusta lo que compartimos y me gusta cómo me siento cuando estoy contigo.<br>
+    No quiero presionarte.<br>
+    Solo quería que supieras que aquí hay alguien que te aprecia, te respeta y disfruta tu compañía.
+  </div>
 
-      <div class="sub">
-        Me gusta lo que compartimos y me gusta cómo me siento cuando estoy contigo.<br>
-        No quiero presionarte.<br>
-        Solo quería que supieras que aquí hay alguien que te aprecia, te respeta y disfruta tu compañía.<br>
-        <strong>Así que…</strong>
-      </div>
+  <p class="question">
+    <strong>Jaymis</strong>, would you let me take you out on Valentine’s Day? 💝
+  </p>
+  <p class="soft">No pressure — just honesty.</p>
 
-      <p class="question">
-        <strong>Jaymis</strong>, would you do me the honor of being my Valentines💝 ?
-      </p>
-      <div class="sig">— Jose Pulgar</div>
+  <div class="actions">
+    <button class="btn yes" id="yesBtn">Yes 💘</button>
+    <button class="btn no" id="noBtn">No 🙈</button>
+  </div>
 
-      <div class="actions">
-        <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
-        <button class="btn no" id="noBtn" type="button">No 🙈</button>
-      </div>
+  <div class="hint" id="hint"></div>
 
-      <div class="hint" id="hint"></div>
+  <div class="result" id="result">
+    <div id="yesGif" style="display:none">
+      <div class="tenor-gif-embed" data-postid="15931245853859273114"></div>
+    </div>
+    <div id="noGif" style="display:none">
+      <div class="tenor-gif-embed" data-postid="14859179"></div>
+    </div>
+    <p id="resultText"></p>
+  </div>
+</section>
 
-      <section class="result" id="result" aria-live="polite">
-        <div id="yesGif" style="display:none">
-          <div class="tenor-gif-embed"
-               data-postid="15931245853859273114"
-               data-share-method="host"
-               data-aspect-ratio="1"
-               data-width="100%"></div>
-        </div>
+</main>
 
-        <div id="noGif" style="display:none">
-          <div class="tenor-gif-embed"
-               data-postid="14859179"
-               data-share-method="host"
-               data-aspect-ratio="2.1"
-               data-width="100%"></div>
-        </div>
+<script>
+const envelope=document.getElementById("envelope");
+const stage=document.getElementById("stage");
+const content=document.getElementById("content");
+envelope.onclick=()=>{
+  envelope.classList.add("open");
+  setTimeout(()=>{
+    stage.style.display="none";
+    content.classList.add("show");
+  },700);
+};
 
-        <p id="resultText"></p>
-      </section>
+const noBtn=document.getElementById("noBtn");
+const yesBtn=document.getElementById("yesBtn");
+const hint=document.getElementById("hint");
+const result=document.getElementById("result");
+const yesGif=document.getElementById("yesGif");
+const noGif=document.getElementById("noGif");
+const resultText=document.getElementById("resultText");
 
-      <footer>Made with intention, not pressure 💌</footer>
+let dodges=0;
+const MAX=5;
 
-      <!-- Formspree email notification -->
-      <iframe name="notify_iframe" style="display:none;"></iframe>
-      <form id="notifyForm"
-            action="https://formspree.io/f/xvzqepyk"
-            method="POST"
-            target="notify_iframe"
-            style="display:none;">
-        <input type="hidden" name="_subject" id="fs_subject">
-        <input type="hidden" name="choice" id="fs_choice">
-        <input type="hidden" name="page" id="fs_page">
-        <input type="hidden" name="time" id="fs_time">
-      </form>
-    </section>
-  </main>
+function dodge(){
+  const x=Math.random()*220-110;
+  const y=Math.random()*90-45;
+  noBtn.style.transform=`translate(${x}px,${y}px)`;
+  hint.textContent="😅 Take your time…";
+}
 
-  <script>
-    // ===== Envelope open =====
-    const envelope = document.getElementById("envelope");
-    const stage = document.getElementById("stage");
-    const content = document.getElementById("content");
+noBtn.onmouseenter=()=>{
+  if(dodges<MAX){dodges++;dodge();}
+};
 
-    let opened = false;
-    function openEnvelope(){
-      if (opened) return;
-      opened = true;
-      envelope.classList.add("open");
-      setTimeout(() => {
-        stage.style.display = "none";
-        content.classList.add("show");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 700);
-    }
+noBtn.onclick=()=>{
+  if(dodges<MAX){dodges++;dodge();return;}
+  result.style.display="block";
+  noGif.style.display="block";
+  resultText.textContent="Thank you for being honest. I respect your decision.";
+};
 
-    envelope.addEventListener("click", openEnvelope);
-    envelope.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") openEnvelope();
-    });
-
-    // ===== Invitation logic =====
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const result = document.getElementById("result");
-    const yesGif = document.getElementById("yesGif");
-    const noGif = document.getElementById("noGif");
-    const resultText = document.getElementById("resultText");
-    const hint = document.getElementById("hint");
-
-    const YES_MESSAGE =
-      "La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
-
-    const NO_MESSAGE =
-      "Thank you for being honest. I respect your decision.";
-
-    function celebrate(){
-      if (typeof confetti !== "function") return;
-      confetti({ particleCount: 130, spread: 85, origin: { y: 0.62 }});
-      setTimeout(() => confetti({ particleCount: 90, spread: 75, origin: { y: 0.62 }}), 200);
-    }
-
-    function notify(choice){
-      document.getElementById("fs_subject").value = `Valentine response: ${choice}`;
-      document.getElementById("fs_choice").value = choice;
-      document.getElementById("fs_page").value = window.location.href;
-      document.getElementById("fs_time").value = new Date().toLocaleString();
-      document.getElementById("notifyForm").submit();
-    }
-
-    function showYes(){
-      result.style.display = "block";
-      yesGif.style.display = "block";
-      noGif.style.display = "none";
-      resultText.textContent = "❤️ " + YES_MESSAGE;
-    }
-
-    function showNo(){
-      result.style.display = "block";
-      noGif.style.display = "block";
-      yesGif.style.display = "none";
-      resultText.textContent = "😔 " + NO_MESSAGE;
-    }
-
-    yesBtn.addEventListener("click", () => {
-      showYes();
-      celebrate();
-      hint.textContent = "";
-      notify("Yes");
-    });
-
-    // Keep No button behavior exactly as it is
-    let dodgeCount = 0;
-    const MAX_DODGES = 5;
-
-    function dodge(){
-      const x = Math.random() * 220 - 110;
-      const y = Math.random() * 90 - 45;
-      noBtn.classList.add("moving");
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-      setTimeout(() => noBtn.classList.remove("moving"), 200);
-
-      hint.textContent = dodgeCount < MAX_DODGES
-        ? `😅 Are you sure? (${MAX_DODGES - dodgeCount} more…)`
-        : "Okay — No is allowed 😄";
-    }
-
-    noBtn.addEventListener("mouseenter", () => {
-      if (dodgeCount < MAX_DODGES) {
-        dodgeCount++;
-        dodge();
-      }
-    });
-
-    noBtn.addEventListener("touchstart", (e) => {
-      if (dodgeCount < MAX_DODGES) {
-        e.preventDefault();
-        dodgeCount++;
-        dodge();
-      }
-    }, { passive:false });
-
-    noBtn.addEventListener("click", () => {
-      if (dodgeCount < MAX_DODGES) {
-        dodgeCount++;
-        dodge();
-        return;
-      }
-      noBtn.style.transform = "translate(0,0)";
-      showNo();
-      notify("No");
-    });
-  </script>
+yesBtn.onclick=()=>{
+  result.style.display="block";
+  yesGif.style.display="block";
+  resultText.textContent="❤️ La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
+  confetti({particleCount:120,spread:90});
+};
+</script>
 </body>
 </html>
