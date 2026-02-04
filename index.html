@@ -22,15 +22,12 @@
       --muted:#475569;
       --accent:#be123c;
       --accent2:#e11d48;
-
       --envBlush:#ffe4e6;
       --envPaper:#ffffff;
-
-      --wax:#7b0823;
+      --wax:#5f061a;
     }
 
     *{box-sizing:border-box}
-
     body{
       margin:0;
       min-height:100vh;
@@ -43,7 +40,7 @@
     }
 
     .card{
-      width:min(860px,100%);
+      width:min(900px,100%);
       background:white;
       border-radius:22px;
       padding:22px;
@@ -53,34 +50,29 @@
       text-align:center;
     }
 
-    /* ===== Envelope Stage ===== */
-    .stage{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
-      padding:8px 0 10px;
-    }
-
+    /* ===== Stage ===== */
     .tapHint{
       color:var(--muted);
       font-size:13px;
-      margin:0;
+      margin:0 0 14px;
     }
 
-    .envelopeWrap{
-      width:min(520px, 96%);
-      height:320px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-    }
-
-    .envelope{
-      width:100%;
-      height:240px;
+    .scene{
       position:relative;
-      border-radius:20px;
+      width:min(560px, 100%);
+      margin:0 auto;
+      height:560px; /* enough space for letter to slide out on phones */
+    }
+
+    /* ===== Envelope (more realistic) ===== */
+    .envelope{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:min(520px, 94vw);
+      height:260px;
+      border-radius:18px;
       cursor:pointer;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
@@ -90,32 +82,33 @@
         radial-gradient(circle at 20% 18%, rgba(190,18,60,.10), rgba(190,18,60,0) 52%),
         radial-gradient(circle at 82% 70%, rgba(190,18,60,.08), rgba(190,18,60,0) 55%),
         linear-gradient(135deg, var(--envBlush), var(--envPaper));
-      border:1px solid rgba(226,232,240,.9);
-      box-shadow: 0 18px 42px rgba(2,6,23,.12);
+      border:1px solid rgba(226,232,240,.92);
+      box-shadow:0 18px 42px rgba(2,6,23,.12);
     }
 
-    /* subtle heart pattern overlay */
+    /* subtle heart texture */
     .envelope::before{
       content:"";
       position:absolute;
       inset:0;
       background-image:
-        radial-gradient(circle at 12px 10px, rgba(190,18,60,.08) 2px, transparent 3px),
-        radial-gradient(circle at 34px 28px, rgba(190,18,60,.06) 2px, transparent 3px),
-        radial-gradient(circle at 56px 12px, rgba(190,18,60,.05) 2px, transparent 3px);
+        radial-gradient(circle at 12px 10px, rgba(190,18,60,.09) 2px, transparent 3px),
+        radial-gradient(circle at 34px 28px, rgba(190,18,60,.07) 2px, transparent 3px),
+        radial-gradient(circle at 56px 12px, rgba(190,18,60,.06) 2px, transparent 3px);
       background-size: 70px 55px;
-      opacity:.35;
+      opacity:.30;
       pointer-events:none;
       z-index:0;
     }
 
+    /* name on envelope */
     .toName{
       position:absolute;
-      top:28px;
+      top:22px;
       left:50%;
       transform:translateX(-50%);
       font-family:"Dancing Script", cursive;
-      font-size:44px;
+      font-size:46px;
       color:#b1123a;
       text-shadow:0 2px 10px rgba(0,0,0,.08);
       pointer-events:none;
@@ -123,69 +116,69 @@
       white-space:nowrap;
     }
 
-    /* Top flap */
+    /* pocket */
+    .pocket{
+      position:absolute;
+      left:-12%;
+      right:-12%;
+      bottom:-36px;
+      height:180px;
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(254,205,211,.96));
+      border-top:1px solid rgba(226,232,240,.85);
+      z-index:2;
+    }
+
+    .foldLeft, .foldRight{
+      position:absolute;
+      bottom:0;
+      width:0;height:0;
+      border-style:solid;
+      z-index:3;
+      opacity:.96;
+    }
+    .foldLeft{
+      left:0;
+      border-width: 150px 0 0 280px;
+      border-color: transparent transparent transparent rgba(254,205,211,.78);
+    }
+    .foldRight{
+      right:0;
+      border-width: 150px 280px 0 0;
+      border-color: transparent rgba(254,205,211,.78) transparent transparent;
+    }
+
+    /* flap (real opening) */
     .flap{
       position:absolute;
-      top:-6px;
+      top:-10px;
       left:0;
       right:0;
       width:0;height:0;
       margin:auto;
-      border-left: 260px solid transparent;
-      border-right:260px solid transparent;
-      border-top: 150px solid rgba(190,18,60,.13);
+      border-left: 280px solid transparent;
+      border-right:280px solid transparent;
+      border-top: 170px solid rgba(190,18,60,.14);
       transform-origin: top center;
-      transition: transform .65s ease;
+      transition: transform .7s ease;
       z-index:7;
       filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
     }
 
-    /* Decorative pocket/folds */
-    .pocket{
-      position:absolute;
-      left:-10%;
-      right:-10%;
-      bottom:-30px;
-      height:170px;
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(254,205,211,.95));
-      border-top:1px solid rgba(226,232,240,.85);
-      z-index:2;
-    }
-    .foldLeft, .foldRight{
-      position:absolute;
-      bottom:0;
-      width:0; height:0;
-      border-style:solid;
-      z-index:3;
-      opacity:.95;
-    }
-    .foldLeft{
-      left:0;
-      border-width: 140px 0 0 260px;
-      border-color: transparent transparent transparent rgba(254,205,211,.75);
-    }
-    .foldRight{
-      right:0;
-      border-width: 140px 260px 0 0;
-      border-color: transparent rgba(254,205,211,.75) transparent transparent;
-    }
-
-    /* ✅ FIX: seal behind letter + lower so it never blocks text */
+    /* wax seal stays on envelope (never blocks letter) */
     .seal{
       position:absolute;
       left:50%;
-      top:176px;              /* lower */
+      top:176px;
       transform:translateX(-50%);
-      width:20px;             /* small */
+      width:20px;
       height:20px;
       border-radius:999px;
-      z-index:2;              /* behind letter */
+      z-index:4;
       pointer-events:none;
-
       background:
-        radial-gradient(circle at 45% 40%, rgba(255,255,255,.06), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 45% 40%, rgba(255,255,255,.05), rgba(255,255,255,0) 55%),
         radial-gradient(circle at 70% 75%, rgba(0,0,0,.22), rgba(0,0,0,0) 60%),
-        linear-gradient(145deg, #5f061a, var(--wax));
+        linear-gradient(145deg, #4c0414, var(--wax));
       box-shadow:
         0 6px 10px rgba(2,6,23,.14),
         inset 0 -6px 9px rgba(0,0,0,.28);
@@ -205,90 +198,78 @@
       text-shadow:0 1px 2px rgba(0,0,0,.35);
     }
 
-    /* Letter preview inside envelope (less plain + readable) */
-    .letter{
+    /* ===== Letter that slides out (real reveal) ===== */
+    .letterOut{
       position:absolute;
       left:50%;
-      bottom:18px;
-      transform:translateX(-50%) translateY(84px);
-      width:88%;
-      height:176px;
-      border-radius:16px;
-      padding:16px;
-      text-align:left;
-      transition: transform .8s ease;
-      z-index:5; /* ABOVE seal */
-
-      /* “paper” look */
-      background:
-        radial-gradient(circle at 20% 25%, rgba(190,18,60,.06), transparent 55%),
-        linear-gradient(180deg, #ffffff, #fff7f8);
-      border:1px solid rgba(226,232,240,.92);
-      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+      bottom:46px;
+      transform:translateX(-50%) translateY(220px); /* hidden initially */
+      width:min(680px, 94vw);
+      transition: transform .95s ease;
+      z-index:9;
+      opacity:0;
     }
 
-    .toLine{
-      margin:0;
-      font-weight:900;
-      color:#0f172a;
-      font-size:18px;          /* bigger */
-      letter-spacing:.01em;
-    }
-    .sigLine{
-      margin:16px 0 0;
-      color:#475569;
-      font-weight:800;
-      font-size:16px;
-    }
-
+    /* When opened: flap flips + letter slides up */
     .open .flap{ transform: rotateX(180deg); }
-    .open .letter{ transform:translateX(-50%) translateY(-92px); }
-    .open .seal{ opacity:.35; }
+    .open .letterOut{
+      transform:translateX(-50%) translateY(-250px);
+      opacity:1;
+    }
 
-    /* ===== Invitation content ===== */
-    .content{ display:none; padding:8px 10px 2px; }
-    .content.show{ display:block; }
-
+    /* ===== Letter page design ===== */
     .letterPage{
-      max-width:66ch;
-      margin:0 auto;
-      text-align:left;
-      padding:22px 20px;
-      border-radius:18px;
-      border:1px solid rgba(226,232,240,.95);
-      box-shadow:0 14px 30px rgba(2,6,23,.08);
-
-      /* romantic paper */
       background:
         radial-gradient(circle at 18% 18%, rgba(225,29,72,.05), transparent 52%),
         radial-gradient(circle at 85% 70%, rgba(190,18,60,.05), transparent 55%),
         linear-gradient(180deg, #ffffff, #fff7f8);
-      position:relative;
+      border:1px solid rgba(226,232,240,.95);
+      border-radius:18px;
+      box-shadow:0 16px 34px rgba(2,6,23,.10);
       overflow:hidden;
+      position:relative;
+      text-align:left;
+      padding:26px 22px 22px;
     }
 
-    /* Tulips (decorative corners) */
+    /* tulips pinned to corners OUTSIDE text area */
     .tulip{
       position:absolute;
-      font-size:28px;
-      opacity:.65;
-      filter:saturate(1.05);
-      user-select:none;
+      font-size:30px;
+      opacity:.55;
       pointer-events:none;
+      user-select:none;
     }
-    .t1{ top:12px; left:14px; transform:rotate(-10deg); }
-    .t2{ top:10px; right:14px; transform:rotate(12deg); }
-    .t3{ bottom:10px; left:16px; transform:rotate(8deg); }
-    .t4{ bottom:10px; right:16px; transform:rotate(-8deg); }
+    .t1{ top:10px; left:12px; transform:rotate(-10deg); }
+    .t2{ top:10px; right:12px; transform:rotate(12deg); }
+    .t3{ bottom:10px; left:12px; transform:rotate(8deg); }
+    .t4{ bottom:10px; right:12px; transform:rotate(-8deg); }
 
-    /* Title “To Jaymis” matte black */
+    /* safe padding region so text never overlaps tulips */
+    .textArea{
+      padding:14px 22px; /* inner padding */
+      border-radius:14px;
+      background: rgba(255,255,255,.70);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border:1px solid rgba(226,232,240,.65);
+    }
+
     .title{
-      font-family: "Cormorant Garamond", serif;
+      font-family:"Cormorant Garamond", serif;
       font-weight:700;
-      font-size:26px;
-      color:#0b1220;        /* matte black */
-      margin:0 0 10px;
+      font-size:28px;
+      color:#0b1220;
+      margin:0;
       letter-spacing:.02em;
+    }
+
+    .withLove{
+      font-family:"Cormorant Garamond", serif;
+      font-weight:600;
+      font-size:18px;
+      color:#0b1220;
+      margin:4px 0 14px;
     }
 
     .sub{
@@ -296,7 +277,8 @@
       font-size:20px;
       line-height:1.65;
       color:#334155;
-      margin:0 0 16px;
+      margin:0 0 14px;
+      white-space:pre-line; /* respects line breaks */
     }
 
     .question{
@@ -356,7 +338,7 @@
       background:rgba(248,250,252,.92);
       border:1px solid rgba(226,232,240,.95);
       text-align:left;
-      max-width:66ch;
+      max-width:min(680px, 94vw);
       margin-left:auto;
       margin-right:auto;
     }
@@ -379,107 +361,103 @@
     @media (max-width: 420px){
       .toName{ font-size:40px; }
       .btn{ min-width:130px; }
-      .envelopeWrap{ height:300px; }
-      .envelope{ height:230px; }
+      .scene{ height:590px; }
       .sub{ font-size:19px; }
+      .letterPage{ padding:22px 16px 18px; }
+      .textArea{ padding:14px 14px; }
     }
   </style>
 </head>
 
 <body>
   <main class="card">
-    <!-- Envelope -->
-    <section class="stage" id="stage">
-      <p class="tapHint">Tap to open 💌</p>
+    <p class="tapHint">Tap to open 💌</p>
 
-      <div class="envelopeWrap">
-        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
-          <div class="toName">Jaymis</div>
-          <div class="flap"></div>
+    <div class="scene">
+      <!-- Envelope -->
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
+        <div class="toName">Jaymis</div>
+        <div class="flap"></div>
+        <div class="seal" aria-hidden="true"></div>
 
-          <div class="seal" aria-hidden="true"></div>
+        <div class="pocket"></div>
+        <div class="foldLeft"></div>
+        <div class="foldRight"></div>
+      </div>
 
-          <div class="letter" aria-hidden="true">
-            <p class="toLine">To: Jaymis</p>
-            <p class="sigLine">— Jose</p>
+      <!-- Letter that slides out -->
+      <div class="letterOut" id="letterOut">
+        <div class="letterPage">
+          <div class="tulip t1">🌷</div>
+          <div class="tulip t2">🌷</div>
+          <div class="tulip t3">🌷</div>
+          <div class="tulip t4">🌷</div>
+
+          <div class="textArea">
+            <div class="title">To Jaymis</div>
+            <div class="withLove">Con cariño,</div>
+
+            <div class="sub" id="spanishText">
+Me gusta cuando compartimos y disfruto estar contigo.
+Valoro esos momentos cuando salimos tranquilos, conversamos y hacemos cosas nuevas juntos.
+
+Quiero que sepas que aquí hay alguien que te aprecia, te respeta, y disfruta tu compañía. Así que…
+            </div>
+
+            <p class="question">
+              <strong>Jaymis</strong>, Would you be my Valentine and do me the honor of accompanying me to dinner on Valentine’s Day? 💝
+            </p>
+            <p class="soft">No pressure — just honesty.</p>
+
+            <div class="actions">
+              <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
+              <button class="btn no" id="noBtn" type="button">No 🙈</button>
+            </div>
+
+            <div class="hint" id="hint"></div>
+          </div>
+        </div>
+
+        <section class="result" id="result" aria-live="polite">
+          <div id="yesGif" style="display:none">
+            <div class="tenor-gif-embed"
+                 data-postid="15931245853859273114"
+                 data-share-method="host"
+                 data-aspect-ratio="1"
+                 data-width="100%"></div>
           </div>
 
-          <div class="pocket"></div>
-          <div class="foldLeft"></div>
-          <div class="foldRight"></div>
-        </div>
+          <div id="noGif" style="display:none">
+            <div class="tenor-gif-embed"
+                 data-postid="14859179"
+                 data-share-method="host"
+                 data-aspect-ratio="2.1"
+                 data-width="100%"></div>
+          </div>
+
+          <p id="resultText"></p>
+        </section>
       </div>
-    </section>
+    </div>
 
-    <!-- Invitation -->
-    <section class="content" id="content">
-      <div class="letterPage">
-        <div class="tulip t1">🌷</div>
-        <div class="tulip t2">🌷</div>
-        <div class="tulip t3">🌷</div>
-        <div class="tulip t4">🌷</div>
-
-        <div class="title">To Jaymis</div>
-
-        <div class="sub">
-          Me gusta compartir contigo y la pasamos muy bien cuando estamos juntos. Me gusta cómo me siento cuando estoy contigo.<br>
-          No quiero presionarte.<br>
-          Solo quiero que sepas que aquí hay alguien que te aprecia, te respeta, y disfruta tu compañía
-        </div>
-
-        <p class="question">
-          <strong>Jaymis</strong>, would you let me take you out on Valentine’s Day? 💝
-        </p>
-        <p class="soft">No pressure — just honesty.</p>
-
-        <div class="actions">
-          <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
-          <button class="btn no" id="noBtn" type="button">No 🙈</button>
-        </div>
-
-        <div class="hint" id="hint"></div>
-      </div>
-
-      <section class="result" id="result" aria-live="polite">
-        <div id="yesGif" style="display:none">
-          <div class="tenor-gif-embed"
-               data-postid="15931245853859273114"
-               data-share-method="host"
-               data-aspect-ratio="1"
-               data-width="100%"></div>
-        </div>
-
-        <div id="noGif" style="display:none">
-          <div class="tenor-gif-embed"
-               data-postid="14859179"
-               data-share-method="host"
-               data-aspect-ratio="2.1"
-               data-width="100%"></div>
-        </div>
-
-        <p id="resultText"></p>
-      </section>
-
-      <footer>Made with intention, not pressure 💌</footer>
-    </section>
+    <footer>Made with intention, not pressure 💌</footer>
   </main>
 
   <script>
-    // ===== Envelope open =====
+    // ===== Open envelope + slide letter out =====
     const envelope = document.getElementById("envelope");
-    const stage = document.getElementById("stage");
-    const content = document.getElementById("content");
+    const letterOut = document.getElementById("letterOut");
 
     let opened = false;
     function openEnvelope(){
-      if (opened) return;
+      if(opened) return;
       opened = true;
       envelope.classList.add("open");
-      setTimeout(() => {
-        stage.style.display = "none";
-        content.classList.add("show");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 700);
+      // letterOut is separate; we just fade/slide it in via CSS when envelope is open:
+      // We'll add the 'open' class to the envelope AND also to the body container via parent:
+      envelope.parentElement.classList.add("open");
+      // Ensure Tenor embed can render when revealed
+      setTimeout(()=>{ if(window.Tenor){} }, 600);
     }
 
     envelope.addEventListener("click", openEnvelope);
@@ -538,15 +516,11 @@
       noBtn.classList.add("moving");
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
       setTimeout(() => noBtn.classList.remove("moving"), 200);
-
       hint.textContent = "😅 Take your time…";
     }
 
     noBtn.addEventListener("mouseenter", () => {
-      if (dodgeCount < MAX_DODGES) {
-        dodgeCount++;
-        dodge();
-      }
+      if (dodgeCount < MAX_DODGES) { dodgeCount++; dodge(); }
     });
 
     noBtn.addEventListener("touchstart", (e) => {
@@ -558,11 +532,7 @@
     }, { passive:false });
 
     noBtn.addEventListener("click", () => {
-      if (dodgeCount < MAX_DODGES) {
-        dodgeCount++;
-        dodge();
-        return;
-      }
+      if (dodgeCount < MAX_DODGES) { dodgeCount++; dodge(); return; }
       noBtn.style.transform = "translate(0,0)";
       showNo();
     });
