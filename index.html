@@ -97,6 +97,7 @@
       box-shadow: 0 18px 42px rgba(2,6,23,.12);
     }
 
+    /* subtle heart pattern overlay */
     .envelope::before{
       content:"";
       position:absolute;
@@ -172,26 +173,27 @@
       white-space:nowrap;
     }
 
+    /* matte wax seal (smaller + moved down) */
     .seal{
       position:absolute;
       left:50%;
-      top:148px;
+      top:160px;      /* moved down from 148 -> 160 */
       transform:translateX(-50%);
-      width:26px;
-      height:26px;
+      width:24px;
+      height:24px;
       border-radius:999px;
       z-index:7;
       pointer-events:none;
 
       background:
-        radial-gradient(circle at 40% 40%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%),
-        radial-gradient(circle at 70% 75%, rgba(0,0,0,.18), rgba(0,0,0,0) 60%),
-        linear-gradient(145deg, #8b0b28, var(--wax));
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,.08), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 70% 75%, rgba(0,0,0,.20), rgba(0,0,0,0) 60%),
+        linear-gradient(145deg, #7b0823, var(--wax));
       box-shadow:
-        0 8px 16px rgba(2,6,23,.14),
-        inset 0 2px 6px rgba(255,255,255,.08),
-        inset 0 -6px 10px rgba(0,0,0,.22);
-      border:1px solid rgba(0,0,0,.08);
+        0 8px 14px rgba(2,6,23,.14),
+        inset 0 2px 6px rgba(255,255,255,.06),
+        inset 0 -6px 10px rgba(0,0,0,.24);
+      border:1px solid rgba(0,0,0,.09);
     }
     .seal::after{
       content:"J";
@@ -202,14 +204,15 @@
       justify-content:center;
       color:rgba(255,255,255,.90);
       font-weight:900;
-      font-size:12px;
+      font-size:11px;
       text-shadow: 0 1px 2px rgba(0,0,0,.30);
     }
 
+    /* letter preview inside (clearer + positioned higher) */
     .letter{
       position:absolute;
       left:50%;
-      transform:translateX(-50%) translateY(70px);
+      transform:translateX(-50%) translateY(82px);
       bottom:18px;
       width:88%;
       height:170px;
@@ -221,8 +224,30 @@
       text-align:left;
       transition: transform .8s ease;
       opacity:.92;
-      filter: blur(.25px);
+      filter: blur(.15px);
       z-index:1;
+    }
+
+    .letter .toLine{
+      margin:0;
+      font-weight:900;
+      color:#0f172a;     /* darker for visibility */
+      font-size:15px;
+      letter-spacing:.01em;
+    }
+
+    .letter .noteLine{
+      margin:10px 0 0;
+      color:#475569;     /* readable, not washed out */
+      font-weight:650;
+      font-size:14px;
+    }
+
+    .letter .sigLine{
+      margin:12px 0 0;
+      color:#64748b;
+      font-weight:700;
+      font-size:14px;
     }
 
     .open .flap{ transform: rotateX(180deg); }
@@ -248,23 +273,19 @@
 
     .question{
       line-height:1.75;
-      margin:0;
       font-size:16px;
       color:var(--text);
       max-width:62ch;
-      margin-left:auto;
-      margin-right:auto;
+      margin:0 auto;
       text-align:left;
     }
 
     .sig{
       color:#64748b;
-      margin-top:10px;
+      margin:10px auto 0;
       font-weight:650;
       text-align:left;
       max-width:62ch;
-      margin-left:auto;
-      margin-right:auto;
     }
 
     .actions{
@@ -332,7 +353,6 @@
       .btn{ min-width:130px; }
       .envelopeWrap{ height:300px; }
       .envelope{ height:230px; }
-      .sub,.question,.sig{ text-align:left; }
     }
   </style>
 </head>
@@ -350,9 +370,9 @@
           <div class="seal" aria-hidden="true"></div>
 
           <div class="letter" aria-hidden="true">
-            <p style="margin:0;font-weight:800;">To: Jaymis</p>
-            <p style="margin:8px 0 0;">I’ll keep this simple.</p>
-            <p style="margin:12px 0 0;color:#64748b;font-weight:650;">— Jose</p>
+            <p class="toLine">To: Jaymis</p>
+            <p class="noteLine">💌</p>
+            <p class="sigLine">— Jose</p>
           </div>
 
           <div class="pocket"></div>
@@ -368,13 +388,13 @@
 
       <div class="sub">
         Me gusta lo que compartimos y me gusta cómo me siento cuando estoy contigo.<br>
-        No quiero presionarte ni pedirte nada.<br>
+        No quiero presionarte.<br>
         Solo quería que supieras que aquí hay alguien que te aprecia, te respeta y disfruta tu compañía.<br>
         <strong>Así que…</strong>
       </div>
 
       <p class="question">
-        ¿Me dejas invitarte a salir este <strong>14 de febrero</strong> — solo tú y yo — y hacer de esa noche algo bonito?
+        <strong>Jaymis</strong>, would you do me the honor of being my Valentines💝 ?
       </p>
       <div class="sig">— Jose Pulgar</div>
 
@@ -495,7 +515,7 @@
       notify("Yes");
     });
 
-    // Keep No button behavior exactly as is
+    // Keep No button behavior exactly as it is
     let dodgeCount = 0;
     const MAX_DODGES = 5;
 
