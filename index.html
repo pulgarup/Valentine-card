@@ -1,315 +1,571 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>For Jaymis 💌</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For Jaymis 💌</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script async src="https://tenor.com/embed.js"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --accent:#be123c;
-  --accent2:#e11d48;
-  --muted:#475569;
-  --text:#0f172a;
-}
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-body{
-  margin:0;
-  min-height:100vh;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background:linear-gradient(135deg,#fff1f2,#f8fafc);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-}
+  <!-- Tenor Embed -->
+  <script async src="https://tenor.com/embed.js"></script>
 
-.card{
-  width:min(860px,100%);
-  background:white;
-  border-radius:22px;
-  padding:22px;
-  box-shadow:0 22px 55px rgba(0,0,0,.12);
-}
+  <style>
+    :root{
+      --bg1:#fff1f2;
+      --bg2:#f8fafc;
+      --text:#0f172a;
+      --muted:#475569;
+      --accent:#be123c;
+      --accent2:#e11d48;
 
-/* ===== Envelope ===== */
-.stage{
-  text-align:center;
-}
+      --envBlush:#ffe4e6;
+      --envPaper:#ffffff;
 
-.tapHint{
-  font-size:13px;
-  color:var(--muted);
-}
+      --wax:#7b0823;
+    }
 
-.envelopeWrap{
-  width:min(520px,96%);
-  height:320px;
-  margin:auto;
-  display:flex;
-  align-items:flex-end;
-}
+    *{box-sizing:border-box}
 
-.envelope{
-  width:100%;
-  height:240px;
-  background:linear-gradient(135deg,#ffe4e6,#ffffff);
-  border-radius:20px;
-  position:relative;
-  cursor:pointer;
-  overflow:hidden;
-}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
 
-/* NAME */
-.toName{
-  position:absolute;
-  top:18px;
-  left:50%;
-  transform:translateX(-50%);
-  font-family:"Dancing Script",cursive;
-  font-size:46px;
-  font-weight:700;
-  color:#9f1239;
-  z-index:10;
-}
+    .card{
+      width:min(860px,100%);
+      background:white;
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 22px 55px rgba(2,6,23,.12);
+      border:1px solid rgba(226,232,240,.9);
+      overflow:hidden;
+      text-align:center;
+    }
 
-/* FLAP */
-.flap{
-  position:absolute;
-  top:-4px;
-  left:0;
-  right:0;
-  margin:auto;
-  width:0;height:0;
-  border-left:260px solid transparent;
-  border-right:260px solid transparent;
-  border-top:150px solid rgba(190,18,60,.15);
-  transform-origin:top;
-  transition:transform .6s ease;
-}
+    /* ===== Envelope Stage ===== */
+    .stage{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      padding:8px 0 10px;
+    }
 
-/* LETTER */
-.letter{
-  position:absolute;
-  left:50%;
-  bottom:20px;
-  transform:translateX(-50%) translateY(100px);
-  width:88%;
-  height:170px;
-  background:white;
-  border-radius:16px;
-  padding:18px;
-  transition:.8s ease;
-  z-index:3;
-}
+    .tapHint{
+      color:var(--muted);
+      font-size:13px;
+      margin:0;
+    }
 
-.toLine{
-  font-size:18px;
-  font-weight:900;
-  color:#0f172a;
-  letter-spacing:.02em;
-}
+    .envelopeWrap{
+      width:min(520px, 96%);
+      height:320px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+    }
 
-.sigLine{
-  margin-top:14px;
-  font-weight:700;
-  color:#475569;
-}
+    .envelope{
+      width:100%;
+      height:240px;
+      position:relative;
+      border-radius:20px;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      overflow:hidden;
 
-/* SEAL */
-.seal{
-  position:absolute;
-  left:50%;
-  top:165px;
-  transform:translateX(-50%);
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#7b0823,#a30f2f);
-  box-shadow:inset 0 -6px 8px rgba(0,0,0,.3);
-  z-index:6;
-}
+      background:
+        radial-gradient(circle at 20% 18%, rgba(190,18,60,.10), rgba(190,18,60,0) 52%),
+        radial-gradient(circle at 82% 70%, rgba(190,18,60,.08), rgba(190,18,60,0) 55%),
+        linear-gradient(135deg, var(--envBlush), var(--envPaper));
+      border:1px solid rgba(226,232,240,.9);
+      box-shadow: 0 18px 42px rgba(2,6,23,.12);
+    }
 
-.seal::after{
-  content:"J";
-  color:white;
-  font-size:11px;
-  font-weight:900;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100%;
-}
+    /* subtle heart pattern overlay */
+    .envelope::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:
+        radial-gradient(circle at 12px 10px, rgba(190,18,60,.08) 2px, transparent 3px),
+        radial-gradient(circle at 34px 28px, rgba(190,18,60,.06) 2px, transparent 3px),
+        radial-gradient(circle at 56px 12px, rgba(190,18,60,.05) 2px, transparent 3px);
+      background-size: 70px 55px;
+      opacity:.35;
+      pointer-events:none;
+      z-index:0;
+    }
 
-/* OPEN */
-.open .flap{transform:rotateX(180deg);}
-.open .letter{transform:translateX(-50%) translateY(-90px);}
-.open .seal{opacity:.35}
+    .toName{
+      position:absolute;
+      top:28px;
+      left:50%;
+      transform:translateX(-50%);
+      font-family:"Dancing Script", cursive;
+      font-size:44px;
+      color:#b1123a;
+      text-shadow:0 2px 10px rgba(0,0,0,.08);
+      pointer-events:none;
+      z-index:6;
+      white-space:nowrap;
+    }
 
-/* ===== CONTENT ===== */
-.content{display:none;}
-.content.show{display:block;}
+    /* Top flap */
+    .flap{
+      position:absolute;
+      top:-6px;
+      left:0;
+      right:0;
+      width:0;height:0;
+      margin:auto;
+      border-left: 260px solid transparent;
+      border-right:260px solid transparent;
+      border-top: 150px solid rgba(190,18,60,.13);
+      transform-origin: top center;
+      transition: transform .65s ease;
+      z-index:7;
+      filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
+    }
 
-.sub{
-  max-width:62ch;
-  margin:0 auto 16px;
-  line-height:1.7;
-  text-align:left;
-  color:var(--muted);
-}
+    /* Decorative pocket/folds */
+    .pocket{
+      position:absolute;
+      left:-10%;
+      right:-10%;
+      bottom:-30px;
+      height:170px;
+      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(254,205,211,.95));
+      border-top:1px solid rgba(226,232,240,.85);
+      z-index:2;
+    }
+    .foldLeft, .foldRight{
+      position:absolute;
+      bottom:0;
+      width:0; height:0;
+      border-style:solid;
+      z-index:3;
+      opacity:.95;
+    }
+    .foldLeft{
+      left:0;
+      border-width: 140px 0 0 260px;
+      border-color: transparent transparent transparent rgba(254,205,211,.75);
+    }
+    .foldRight{
+      right:0;
+      border-width: 140px 260px 0 0;
+      border-color: transparent rgba(254,205,211,.75) transparent transparent;
+    }
 
-.question{
-  max-width:62ch;
-  margin:auto;
-  font-size:16px;
-  line-height:1.7;
-  text-align:left;
-}
+    /* ✅ FIX: seal behind letter + lower so it never blocks text */
+    .seal{
+      position:absolute;
+      left:50%;
+      top:176px;              /* lower */
+      transform:translateX(-50%);
+      width:20px;             /* small */
+      height:20px;
+      border-radius:999px;
+      z-index:2;              /* behind letter */
+      pointer-events:none;
 
-.soft{
-  margin-top:8px;
-  font-size:13px;
-  color:#64748b;
-}
+      background:
+        radial-gradient(circle at 45% 40%, rgba(255,255,255,.06), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 70% 75%, rgba(0,0,0,.22), rgba(0,0,0,0) 60%),
+        linear-gradient(145deg, #5f061a, var(--wax));
+      box-shadow:
+        0 6px 10px rgba(2,6,23,.14),
+        inset 0 -6px 9px rgba(0,0,0,.28);
+      border:1px solid rgba(0,0,0,.10);
+      opacity:.95;
+    }
+    .seal::after{
+      content:"J";
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:rgba(255,255,255,.92);
+      font-weight:900;
+      font-size:10px;
+      text-shadow:0 1px 2px rgba(0,0,0,.35);
+    }
 
-.actions{
-  display:flex;
-  gap:14px;
-  justify-content:center;
-  margin-top:18px;
-}
+    /* Letter preview inside envelope (less plain + readable) */
+    .letter{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(84px);
+      width:88%;
+      height:176px;
+      border-radius:16px;
+      padding:16px;
+      text-align:left;
+      transition: transform .8s ease;
+      z-index:5; /* ABOVE seal */
 
-.btn{
-  padding:14px 20px;
-  border-radius:14px;
-  font-weight:800;
-  cursor:pointer;
-  border:none;
-}
+      /* “paper” look */
+      background:
+        radial-gradient(circle at 20% 25%, rgba(190,18,60,.06), transparent 55%),
+        linear-gradient(180deg, #ffffff, #fff7f8);
+      border:1px solid rgba(226,232,240,.92);
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+    }
 
-.yes{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;}
-.no{background:#f1f5f9;}
+    .toLine{
+      margin:0;
+      font-weight:900;
+      color:#0f172a;
+      font-size:18px;          /* bigger */
+      letter-spacing:.01em;
+    }
+    .sigLine{
+      margin:16px 0 0;
+      color:#475569;
+      font-weight:800;
+      font-size:16px;
+    }
 
-.hint{
-  font-size:13px;
-  color:var(--muted);
-  margin-top:10px;
-  min-height:18px;
-}
+    .open .flap{ transform: rotateX(180deg); }
+    .open .letter{ transform:translateX(-50%) translateY(-92px); }
+    .open .seal{ opacity:.35; }
 
-.result{
-  display:none;
-  margin-top:20px;
-}
+    /* ===== Invitation content ===== */
+    .content{ display:none; padding:8px 10px 2px; }
+    .content.show{ display:block; }
 
-@media(max-width:420px){
-  .toName{font-size:40px}
-}
-</style>
+    .letterPage{
+      max-width:66ch;
+      margin:0 auto;
+      text-align:left;
+      padding:22px 20px;
+      border-radius:18px;
+      border:1px solid rgba(226,232,240,.95);
+      box-shadow:0 14px 30px rgba(2,6,23,.08);
+
+      /* romantic paper */
+      background:
+        radial-gradient(circle at 18% 18%, rgba(225,29,72,.05), transparent 52%),
+        radial-gradient(circle at 85% 70%, rgba(190,18,60,.05), transparent 55%),
+        linear-gradient(180deg, #ffffff, #fff7f8);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* Tulips (decorative corners) */
+    .tulip{
+      position:absolute;
+      font-size:28px;
+      opacity:.65;
+      filter:saturate(1.05);
+      user-select:none;
+      pointer-events:none;
+    }
+    .t1{ top:12px; left:14px; transform:rotate(-10deg); }
+    .t2{ top:10px; right:14px; transform:rotate(12deg); }
+    .t3{ bottom:10px; left:16px; transform:rotate(8deg); }
+    .t4{ bottom:10px; right:16px; transform:rotate(-8deg); }
+
+    /* Title “To Jaymis” matte black */
+    .title{
+      font-family: "Cormorant Garamond", serif;
+      font-weight:700;
+      font-size:26px;
+      color:#0b1220;        /* matte black */
+      margin:0 0 10px;
+      letter-spacing:.02em;
+    }
+
+    .sub{
+      font-family:"Cormorant Garamond", serif;
+      font-size:20px;
+      line-height:1.65;
+      color:#334155;
+      margin:0 0 16px;
+    }
+
+    .question{
+      margin:10px 0 0;
+      font-size:18px;
+      line-height:1.7;
+      color:#0f172a;
+      font-weight:650;
+    }
+
+    .soft{
+      margin-top:8px;
+      font-size:13px;
+      color:#64748b;
+      font-weight:600;
+    }
+
+    .actions{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:14px 20px;
+      border-radius:14px;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      border:none;
+      user-select:none;
+      transition:transform .14s ease, box-shadow .14s ease;
+      -webkit-tap-highlight-color: transparent;
+      min-width:140px;
+    }
+    .btn:hover{ transform:translateY(-2px); box-shadow:0 14px 30px rgba(2,6,23,.10); }
+
+    .yes{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
+    .no{ background:#f1f5f9; border:1px solid rgba(226,232,240,.95); position:relative; }
+    .no.moving{ transition:transform .18s ease; }
+
+    .hint{
+      font-size:13px;
+      color:var(--muted);
+      min-height:18px;
+      margin-top:10px;
+      text-align:center;
+    }
+
+    .result{
+      display:none;
+      margin-top:18px;
+      padding:16px;
+      border-radius:16px;
+      background:rgba(248,250,252,.92);
+      border:1px solid rgba(226,232,240,.95);
+      text-align:left;
+      max-width:66ch;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    #resultText{
+      margin:14px 0 0;
+      line-height:1.65;
+      font-weight:650;
+      color:var(--text);
+      word-break:break-word;
+    }
+
+    footer{
+      margin-top:16px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    @media (max-width: 420px){
+      .toName{ font-size:40px; }
+      .btn{ min-width:130px; }
+      .envelopeWrap{ height:300px; }
+      .envelope{ height:230px; }
+      .sub{ font-size:19px; }
+    }
+  </style>
 </head>
 
 <body>
-<main class="card">
+  <main class="card">
+    <!-- Envelope -->
+    <section class="stage" id="stage">
+      <p class="tapHint">Tap to open 💌</p>
 
-<section class="stage" id="stage">
-  <p class="tapHint">Tap to open 💌</p>
-  <div class="envelopeWrap">
-    <div class="envelope" id="envelope">
-      <div class="toName">Jaymis</div>
-      <div class="flap"></div>
-      <div class="seal"></div>
+      <div class="envelopeWrap">
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
+          <div class="toName">Jaymis</div>
+          <div class="flap"></div>
 
-      <div class="letter">
-        <div class="toLine">To: Jaymis</div>
-        <div class="sigLine">— Jose</div>
+          <div class="seal" aria-hidden="true"></div>
+
+          <div class="letter" aria-hidden="true">
+            <p class="toLine">To: Jaymis</p>
+            <p class="sigLine">— Jose</p>
+          </div>
+
+          <div class="pocket"></div>
+          <div class="foldLeft"></div>
+          <div class="foldRight"></div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section class="content" id="content">
-  <div class="sub">
-    Me gusta lo que compartimos y me gusta cómo me siento cuando estoy contigo.<br>
-    No quiero presionarte.<br>
-    Solo quería que supieras que aquí hay alguien que te aprecia, te respeta y disfruta tu compañía.
-  </div>
+    <!-- Invitation -->
+    <section class="content" id="content">
+      <div class="letterPage">
+        <div class="tulip t1">🌷</div>
+        <div class="tulip t2">🌷</div>
+        <div class="tulip t3">🌷</div>
+        <div class="tulip t4">🌷</div>
 
-  <p class="question">
-    <strong>Jaymis</strong>, would you let me take you out on Valentine’s Day? 💝
-  </p>
-  <p class="soft">No pressure — just honesty.</p>
+        <div class="title">To Jaymis</div>
 
-  <div class="actions">
-    <button class="btn yes" id="yesBtn">Yes 💘</button>
-    <button class="btn no" id="noBtn">No 🙈</button>
-  </div>
+        <div class="sub">
+          Me gusta compartir contigo y la pasamos muy bien cuando estamos juntos. Me gusta cómo me siento cuando estoy contigo.<br>
+          No quiero presionarte.<br>
+          Solo quiero que sepas que aquí hay alguien que te aprecia, te respeta, y disfruta tu compañía
+        </div>
 
-  <div class="hint" id="hint"></div>
+        <p class="question">
+          <strong>Jaymis</strong>, would you let me take you out on Valentine’s Day? 💝
+        </p>
+        <p class="soft">No pressure — just honesty.</p>
 
-  <div class="result" id="result">
-    <div id="yesGif" style="display:none">
-      <div class="tenor-gif-embed" data-postid="15931245853859273114"></div>
-    </div>
-    <div id="noGif" style="display:none">
-      <div class="tenor-gif-embed" data-postid="14859179"></div>
-    </div>
-    <p id="resultText"></p>
-  </div>
-</section>
+        <div class="actions">
+          <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
+          <button class="btn no" id="noBtn" type="button">No 🙈</button>
+        </div>
 
-</main>
+        <div class="hint" id="hint"></div>
+      </div>
 
-<script>
-const envelope=document.getElementById("envelope");
-const stage=document.getElementById("stage");
-const content=document.getElementById("content");
-envelope.onclick=()=>{
-  envelope.classList.add("open");
-  setTimeout(()=>{
-    stage.style.display="none";
-    content.classList.add("show");
-  },700);
-};
+      <section class="result" id="result" aria-live="polite">
+        <div id="yesGif" style="display:none">
+          <div class="tenor-gif-embed"
+               data-postid="15931245853859273114"
+               data-share-method="host"
+               data-aspect-ratio="1"
+               data-width="100%"></div>
+        </div>
 
-const noBtn=document.getElementById("noBtn");
-const yesBtn=document.getElementById("yesBtn");
-const hint=document.getElementById("hint");
-const result=document.getElementById("result");
-const yesGif=document.getElementById("yesGif");
-const noGif=document.getElementById("noGif");
-const resultText=document.getElementById("resultText");
+        <div id="noGif" style="display:none">
+          <div class="tenor-gif-embed"
+               data-postid="14859179"
+               data-share-method="host"
+               data-aspect-ratio="2.1"
+               data-width="100%"></div>
+        </div>
 
-let dodges=0;
-const MAX=5;
+        <p id="resultText"></p>
+      </section>
 
-function dodge(){
-  const x=Math.random()*220-110;
-  const y=Math.random()*90-45;
-  noBtn.style.transform=`translate(${x}px,${y}px)`;
-  hint.textContent="😅 Take your time…";
-}
+      <footer>Made with intention, not pressure 💌</footer>
+    </section>
+  </main>
 
-noBtn.onmouseenter=()=>{
-  if(dodges<MAX){dodges++;dodge();}
-};
+  <script>
+    // ===== Envelope open =====
+    const envelope = document.getElementById("envelope");
+    const stage = document.getElementById("stage");
+    const content = document.getElementById("content");
 
-noBtn.onclick=()=>{
-  if(dodges<MAX){dodges++;dodge();return;}
-  result.style.display="block";
-  noGif.style.display="block";
-  resultText.textContent="Thank you for being honest. I respect your decision.";
-};
+    let opened = false;
+    function openEnvelope(){
+      if (opened) return;
+      opened = true;
+      envelope.classList.add("open");
+      setTimeout(() => {
+        stage.style.display = "none";
+        content.classList.add("show");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 700);
+    }
 
-yesBtn.onclick=()=>{
-  result.style.display="block";
-  yesGif.style.display="block";
-  resultText.textContent="❤️ La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
-  confetti({particleCount:120,spread:90});
-};
-</script>
+    envelope.addEventListener("click", openEnvelope);
+    envelope.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") openEnvelope();
+    });
+
+    // ===== Buttons/GIFs/confetti =====
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const hint = document.getElementById("hint");
+
+    const result = document.getElementById("result");
+    const yesGif = document.getElementById("yesGif");
+    const noGif = document.getElementById("noGif");
+    const resultText = document.getElementById("resultText");
+
+    const YES_MESSAGE =
+      "La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
+
+    const NO_MESSAGE =
+      "Thank you for being honest. I respect your decision.";
+
+    function celebrate(){
+      if (typeof confetti !== "function") return;
+      confetti({ particleCount: 120, spread: 90, origin:{ y:0.62 }});
+      setTimeout(()=>confetti({ particleCount: 80, spread: 75, origin:{ y:0.62 }}), 180);
+    }
+
+    function showYes(){
+      result.style.display = "block";
+      yesGif.style.display = "block";
+      noGif.style.display = "none";
+      resultText.textContent = "❤️ " + YES_MESSAGE;
+    }
+    function showNo(){
+      result.style.display = "block";
+      noGif.style.display = "block";
+      yesGif.style.display = "none";
+      resultText.textContent = "😔 " + NO_MESSAGE;
+    }
+
+    yesBtn.addEventListener("click", () => {
+      showYes();
+      celebrate();
+      hint.textContent = "";
+    });
+
+    // Keep No button behavior: dodge 5 times; 6th click works
+    let dodgeCount = 0;
+    const MAX_DODGES = 5;
+
+    function dodge(){
+      const x = Math.random() * 220 - 110;
+      const y = Math.random() * 90 - 45;
+      noBtn.classList.add("moving");
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      setTimeout(() => noBtn.classList.remove("moving"), 200);
+
+      hint.textContent = "😅 Take your time…";
+    }
+
+    noBtn.addEventListener("mouseenter", () => {
+      if (dodgeCount < MAX_DODGES) {
+        dodgeCount++;
+        dodge();
+      }
+    });
+
+    noBtn.addEventListener("touchstart", (e) => {
+      if (dodgeCount < MAX_DODGES) {
+        e.preventDefault();
+        dodgeCount++;
+        dodge();
+      }
+    }, { passive:false });
+
+    noBtn.addEventListener("click", () => {
+      if (dodgeCount < MAX_DODGES) {
+        dodgeCount++;
+        dodge();
+        return;
+      }
+      noBtn.style.transform = "translate(0,0)";
+      showNo();
+    });
+  </script>
 </body>
 </html>
