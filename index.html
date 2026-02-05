@@ -71,7 +71,7 @@ body{
   height:360px;
 }
 
-/* LETTER */
+/* Letter */
 .letterOut{
   position:absolute;
   inset:0;
@@ -103,6 +103,7 @@ body{
   max-height:min(74vh, 600px);
   overflow:auto;
   -webkit-overflow-scrolling: touch;
+  position:relative;
 }
 
 .textArea{
@@ -110,6 +111,7 @@ body{
   background:rgba(255,255,255,.78);
   border-radius:14px;
   border:1px solid rgba(226,232,240,.65);
+  position:relative;
 }
 
 .title{
@@ -134,7 +136,9 @@ body{
   color:#334155;
   white-space:pre-line;
   margin:0 0 14px;
+  min-height:160px; /* helps layout while typing */
 }
+
 .question{
   margin:12px 0 0;
   font-size:18px;
@@ -167,7 +171,6 @@ body{
   border:none;
   min-width:140px;
 }
-
 .yes{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
 .no{ background:#f1f5f9; border:1px solid rgba(226,232,240,.95); }
 .no.moving{ transition:transform .18s ease; }
@@ -180,6 +183,7 @@ body{
   text-align:center;
 }
 
+/* Result / GIF area */
 .result{
   display:none;
   margin-top:18px;
@@ -188,7 +192,6 @@ body{
   background:rgba(248,250,252,.92);
   border:1px solid rgba(226,232,240,.95);
 }
-
 #resultText{
   margin:14px 0 0;
   line-height:1.65;
@@ -196,7 +199,41 @@ body{
   color:var(--text);
 }
 
-/* ENVELOPE */
+/* ✅ Vibe chooser */
+.vibeWrap{
+  display:none;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid rgba(226,232,240,.9);
+}
+.vibeTitle{
+  font-weight:800;
+  color:#0f172a;
+  margin:0 0 10px;
+}
+.vibeBtns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.vibeBtn{
+  border:1px solid rgba(226,232,240,.95);
+  background:white;
+  border-radius:999px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:800;
+}
+.vibeBtn:hover{ background:#f8fafc; }
+.vibeNote{
+  margin:10px 0 0;
+  color:#475569;
+  font-weight:700;
+  text-align:center;
+}
+
+/* Envelope */
 .envelope{
   position:absolute;
   inset:0;
@@ -270,11 +307,49 @@ body{
   opacity:.95;
 }
 
+/* ✅ Tulips (tap notes) — pinned OUTSIDE text so they never overlap words */
+.tulip{
+  position:absolute;
+  font-size:26px;
+  opacity:.55;
+  user-select:none;
+  cursor:pointer;
+  z-index:3;
+}
+.tulip:hover{ opacity:.75; }
+.t1{ top:10px; left:10px; }
+.t2{ top:10px; right:10px; }
+.t3{ bottom:10px; left:10px; }
+.t4{ bottom:10px; right:10px; }
+
+/* Toast for tulip notes */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  background:rgba(15,23,42,.92);
+  color:white;
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:13px;
+  box-shadow:0 12px 30px rgba(2,6,23,.22);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:9999;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(-6px);
+}
+
 @media (max-width:420px){
   .toName{ font-size:40px; }
   .btn{ min-width:130px; }
   .textArea{ padding:16px 16px; }
-  .sub{ font-size:19px; }
+  .sub{ font-size:19px; min-height:170px; }
   :root{ --envDrop: 60px; }
 }
 
@@ -296,19 +371,20 @@ footer{
 
       <!-- LETTER -->
       <div class="letterOut">
-        <div class="letterPage">
+        <div class="letterPage" id="letterPage">
+
+          <!-- ✅ Tulips (tap notes) -->
+          <div class="tulip t1" data-note="Me encanta tu energía. 🌷">🌷</div>
+          <div class="tulip t2" data-note="I’m proud of the woman you are.">🌷</div>
+          <div class="tulip t3" data-note="Sin presión. Solo bonito.">🌷</div>
+          <div class="tulip t4" data-note="Gracias por leer esto con el corazón.">🌷</div>
+
           <div class="textArea">
             <div class="title">To Jaymis</div>
             <div class="withLove">Con cariño,</div>
 
-            <div class="sub">
-Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
-Disfruto conversar, salir y descubrir planes sin presión.
-
-Quiero que sepas que aquí hay alguien que te aprecia, te respeta y valora tu compañía.
-
-Así que…
-            </div>
+            <!-- ✅ Typewriter message target -->
+            <div class="sub" id="spanishMsg"></div>
 
             <p class="question">
               <strong>Jaymis</strong>, would you like to be my Valentine and do me the honor of letting me take you out on Valentine’s Day? 💝
@@ -340,7 +416,19 @@ Así que…
               </div>
 
               <p id="resultText"></p>
+
+              <!-- ✅ Vibe chooser after YES -->
+              <div class="vibeWrap" id="vibeWrap">
+                <p class="vibeTitle">One more thing… pick the vibe ✨</p>
+                <div class="vibeBtns">
+                  <button class="vibeBtn" type="button" data-vibe="🌙 Cozy & calm">🌙 Cozy</button>
+                  <button class="vibeBtn" type="button" data-vibe="🍷 Dinner">🍷 Dinner</button>
+                  <button class="vibeBtn" type="button" data-vibe="🎡 Something new">🎡 Something new</button>
+                </div>
+                <p class="vibeNote" id="vibeNote"></p>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -358,34 +446,24 @@ Así que…
   <footer>Made with intention, not pressure 💌</footer>
 </main>
 
+<div class="toast" id="toast"></div>
+
 <script>
 /* ✅ Formspree endpoint */
 const FORMSPREE_URL = "https://formspree.io/f/xvzqepyk";
 
-/* ✅ Prevent double-email if someone clicks multiple times */
+/* ✅ Prevent double-sends */
 let sentYes = false;
 let sentNo  = false;
+let sentVibe = false;
 
-async function sendChoiceEmail(choice){
-  // choice: "YES" or "NO"
+async function sendToFormspree(payload){
   try{
-    const payload = {
-      choice,
-      page: window.location.href,
-      time: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    };
-
     const res = await fetch(FORMSPREE_URL, {
       method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
+      headers: { "Accept":"application/json", "Content-Type":"application/json" },
       body: JSON.stringify(payload)
     });
-
-    // Optional: if something fails, you’ll see it in console
     if(!res.ok){
       console.warn("Formspree failed:", res.status, await res.text());
     }
@@ -394,22 +472,89 @@ async function sendChoiceEmail(choice){
   }
 }
 
+async function sendChoice(choice){
+  await sendToFormspree({
+    choice,
+    page: window.location.href,
+    time: new Date().toISOString(),
+    userAgent: navigator.userAgent
+  });
+}
+
+async function sendVibe(vibe){
+  await sendToFormspree({
+    choice: "YES_VIBE",
+    vibe,
+    page: window.location.href,
+    time: new Date().toISOString()
+  });
+}
+
+/* Envelope open + Typewriter (A) */
 const envelope = document.getElementById("envelope");
 const scene = document.getElementById("scene");
 
+const spanishMsgEl = document.getElementById("spanishMsg");
+const FULL_SPANISH =
+`Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
+Disfruto conversar, salir y descubrir planes sin presión.
+
+Quiero que sepas que aquí hay alguien que te aprecia, te respeta y valora tu compañía.
+
+Así que…`;
+
 let opened=false;
+let typed=false;
+
+function typeWriter(text, el, speed=18){
+  if(typed) return;
+  typed = true;
+  el.textContent = "";
+  let i = 0;
+
+  const timer = setInterval(() => {
+    el.textContent += text[i] ?? "";
+    i++;
+    // subtle auto-scroll inside letter if needed
+    el.closest(".letterPage")?.scrollTo({ top: 0 });
+
+    if(i >= text.length){
+      clearInterval(timer);
+    }
+  }, speed);
+}
+
 function openEnvelope(){
   if(opened) return;
   opened=true;
   scene.classList.add("open");
+  // start typing after a small delay so it feels intentional
+  setTimeout(() => typeWriter(FULL_SPANISH, spanishMsgEl, 16), 250);
 }
+
 envelope.addEventListener("click", openEnvelope);
 envelope.addEventListener("touchstart", openEnvelope, { passive:true });
 envelope.addEventListener("keydown", (e)=> {
   if(e.key==="Enter" || e.key===" ") openEnvelope();
 });
 
-// Buttons
+/* Tulip tap notes (D) */
+const toast = document.getElementById("toast");
+let toastTimer = null;
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove("show"), 1600);
+}
+
+document.querySelectorAll(".tulip").forEach(t => {
+  t.addEventListener("click", () => showToast(t.dataset.note || "🌷"));
+  t.addEventListener("touchstart", () => showToast(t.dataset.note || "🌷"), { passive:true });
+});
+
+/* Buttons + GIFs + Formspree + vibe (C) */
 const yesBtn=document.getElementById("yesBtn");
 const noBtn=document.getElementById("noBtn");
 const hint=document.getElementById("hint");
@@ -418,6 +563,9 @@ const result=document.getElementById("result");
 const yesGif=document.getElementById("yesGif");
 const noGif=document.getElementById("noGif");
 const resultText=document.getElementById("resultText");
+
+const vibeWrap = document.getElementById("vibeWrap");
+const vibeNote = document.getElementById("vibeNote");
 
 const YES_MESSAGE =
   "La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
@@ -438,13 +586,32 @@ yesBtn.addEventListener("click", async ()=>{
   hint.textContent="";
   celebrate();
 
+  // show vibe chooser (C)
+  vibeWrap.style.display = "block";
+  vibeNote.textContent = "Pick what feels most you.";
+
   if(!sentYes){
     sentYes = true;
-    await sendChoiceEmail("YES");
+    await sendChoice("YES");
   }
 });
 
-// No button dodges 5 times, then works
+// Vibe buttons
+document.querySelectorAll(".vibeBtn").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const vibe = btn.dataset.vibe;
+    vibeNote.textContent = `Perfect. ${vibe} — noted.`;
+    showToast("Noted ✨");
+
+    // send vibe once
+    if(!sentVibe){
+      sentVibe = true;
+      await sendVibe(vibe);
+    }
+  });
+});
+
+/* No button dodges 5 times, then works */
 let dodgeCount=0;
 const MAX_DODGES=5;
 
@@ -454,7 +621,14 @@ function dodge(){
   noBtn.classList.add("moving");
   noBtn.style.transform = `translate(${x}px, ${y}px)`;
   setTimeout(()=>noBtn.classList.remove("moving"), 200);
-  hint.textContent="😅 Take your time…";
+
+  const lines = [
+    "😅 Take your time…",
+    "No pressure.",
+    "Honesty > pressure.",
+    "Whatever you choose, I’ll respect it."
+  ];
+  hint.textContent = lines[Math.min(dodgeCount, lines.length-1)];
 }
 
 noBtn.addEventListener("mouseenter", ()=>{
@@ -478,9 +652,13 @@ noBtn.addEventListener("click", async ()=>{
   yesGif.style.display="none";
   resultText.textContent="😔 " + NO_MESSAGE;
 
+  // hide vibe area if she says no
+  vibeWrap.style.display = "none";
+  vibeNote.textContent = "";
+
   if(!sentNo){
     sentNo = true;
-    await sendChoiceEmail("NO");
+    await sendChoice("NO");
   }
 });
 </script>
