@@ -20,6 +20,9 @@
   --envBlush:#ffe4e6;
   --envPaper:#ffffff;
   --wax:#5f061a;
+
+  /* ✅ Responsive lift: always safe on iPhone + still pretty on laptop */
+  --lift: clamp(58px, 7.5vh, 110px);
 }
 
 *{box-sizing:border-box}
@@ -36,7 +39,7 @@ body{
 }
 
 .card{
-  width:min(920px,100%);
+  width:min(980px,100%);
   background:white;
   border-radius:22px;
   padding:18px;
@@ -49,25 +52,31 @@ body{
 .tapHint{
   color:var(--muted);
   font-size:13px;
-  margin:4px 0 10px;
+  margin:6px 0 10px;
 }
 
-/* ✅ FIX: stage keeps everything centered, no huge whitespace */
+/* ✅ Stage: centered, consistent on phones + MacBook */
 .stage{
   position:relative;
-  width:min(600px, 100%);
-  height:min(78vh, 640px);
+  width:min(640px, 100%);
+  height: min(78vh, 680px);
   margin:0 auto;
   display:flex;
   align-items:center;
   justify-content:center;
+  padding: 14px 0 10px;
+}
+
+/* Extra safe space on tall iPhones / notches */
+@supports(padding: max(0px)){
+  .stage{ padding-top: max(14px, env(safe-area-inset-top)); }
 }
 
 /* Envelope group centered */
 .envelopeGroup{
   position:relative;
-  width:min(520px, 94vw);
-  height:300px;
+  width:min(540px, 94vw);
+  height:320px;
 }
 
 /* Envelope */
@@ -100,12 +109,12 @@ body{
     radial-gradient(circle at 34px 28px, rgba(190,18,60,.07) 2px, transparent 3px),
     radial-gradient(circle at 56px 12px, rgba(190,18,60,.06) 2px, transparent 3px);
   background-size:70px 55px;
-  opacity:.3;
+  opacity:.30;
   pointer-events:none;
   z-index:0;
 }
 
-/* Name */
+/* Name on envelope */
 .toName{
   position:absolute;
   top:22px;
@@ -166,7 +175,7 @@ body{
   filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
 }
 
-/* Seal */
+/* Wax seal */
 .seal{
   position:absolute;
   left:50%;
@@ -200,23 +209,23 @@ body{
   text-shadow:0 1px 2px rgba(0,0,0,.35);
 }
 
-/* Letter (hidden behind envelope until open) */
+/* Letter */
 .letterOut{
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%, -50%) translateY(24px);
-  width:min(680px, 96vw);
+  transform:translate(-50%, -50%) translateY(18px);
+  width:min(720px, 96vw);
   opacity:0;
   transition:transform .85s ease, opacity .35s ease;
   z-index:20;
   pointer-events:none;
 }
 
-/* ✅ When open: flap flips + letter rises just a bit, stays visible */
+/* ✅ Open behavior: lift by responsive var */
 .open .flap{ transform:rotateX(180deg); }
 .open .letterOut{
-  transform:translate(-50%, -50%) translateY(-120px);
+  transform:translate(-50%, -50%) translateY(calc(-1 * var(--lift)));
   opacity:1;
   pointer-events:auto;
 }
@@ -233,9 +242,14 @@ body{
   position:relative;
   text-align:left;
   padding:24px 20px;
+
+  /* ✅ ensures the full content can be seen on any screen */
+  max-height: min(72vh, 560px);
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Tulips pinned to corners (won’t overlap text) */
+/* Tulips */
 .tulip{
   position:absolute;
   font-size:28px;
@@ -248,7 +262,6 @@ body{
 .t3{ bottom:10px; left:12px; }
 .t4{ bottom:10px; right:12px; }
 
-/* extra inner padding so text can never touch tulips */
 .textArea{
   padding:18px 24px;
   border-radius:14px;
@@ -272,7 +285,6 @@ body{
   color:#0b1220;
   margin:4px 0 14px;
 }
-
 .sub{
   font-family:"Cormorant Garamond",serif;
   font-size:20px;
@@ -281,7 +293,6 @@ body{
   margin:0 0 14px;
   white-space:pre-line;
 }
-
 .question{
   margin:10px 0 0;
   font-size:18px;
@@ -289,7 +300,6 @@ body{
   color:#0f172a;
   font-weight:650;
 }
-
 .soft{
   margin-top:8px;
   font-size:13px;
@@ -358,7 +368,6 @@ footer{
   .btn{ min-width:130px; }
   .textArea{ padding:16px 16px; }
   .sub{ font-size:19px; }
-  .open .letterOut{ transform:translate(-50%, -50%) translateY(-105px); }
 }
 </style>
 </head>
@@ -370,7 +379,6 @@ footer{
   <div class="stage">
     <div class="envelopeGroup" id="scene">
 
-      <!-- Letter -->
       <div class="letterOut" id="letterOut">
         <div class="letterPage">
           <div class="tulip t1">🌷</div>
@@ -382,7 +390,7 @@ footer{
             <div class="title">To Jaymis</div>
             <div class="withLove">Con cariño,</div>
 
-            <div class="sub" id="spanishMessage">
+            <div class="sub">
 Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
 Disfruto conversar, salir y descubrir planes sin presión.
 
@@ -403,23 +411,22 @@ Así que…
 
             <div class="hint" id="hint"></div>
           </div>
+
+          <section class="result" id="result" aria-live="polite">
+            <div id="yesGif" style="display:none">
+              <div class="tenor-gif-embed" data-postid="15931245853859273114"></div>
+            </div>
+
+            <div id="noGif" style="display:none; text-align:center;">
+              <img src="https://tenor.com/bjUpa.gif" alt="Sad reaction"
+                   style="max-width:100%; border-radius:14px;" />
+            </div>
+
+            <p id="resultText"></p>
+          </section>
         </div>
-
-        <section class="result" id="result" aria-live="polite">
-          <div id="yesGif" style="display:none">
-            <div class="tenor-gif-embed" data-postid="15931245853859273114"></div>
-          </div>
-
-          <div id="noGif" style="display:none; text-align:center;">
-            <img src="https://tenor.com/bjUpa.gif" alt="Sad reaction"
-                 style="max-width:100%; border-radius:14px;" />
-          </div>
-
-          <p id="resultText"></p>
-        </section>
       </div>
 
-      <!-- Envelope -->
       <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
         <div class="toName">Jaymis</div>
         <div class="flap"></div>
