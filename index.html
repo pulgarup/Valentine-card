@@ -20,29 +20,29 @@
   --envBlush:#ffe4e6;
   --envPaper:#ffffff;
   --wax:#5f061a;
-  --envDrop: 70px;
+  --envDrop:70px;
 }
 
 *{box-sizing:border-box}
+html,body{height:100%}
 
-html,body{ height:100%; }
 body{
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background: linear-gradient(135deg,var(--bg1),var(--bg2));
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   padding:18px;
-  padding-left: max(18px, env(safe-area-inset-left));
-  padding-right:max(18px, env(safe-area-inset-right));
-  padding-top:  max(18px, env(safe-area-inset-top));
-  padding-bottom:max(18px, env(safe-area-inset-bottom));
+  padding-left:max(18px,env(safe-area-inset-left));
+  padding-right:max(18px,env(safe-area-inset-right));
+  padding-top:max(18px,env(safe-area-inset-top));
+  padding-bottom:max(18px,env(safe-area-inset-bottom));
 }
 
 .card{
   width:min(980px,100%);
-  background:white;
+  background:#fff;
   border-radius:22px;
   padding:16px;
   box-shadow:0 22px 55px rgba(2,6,23,.12);
@@ -52,134 +52,118 @@ body{
 }
 
 .tapHint{
-  color:var(--muted);
   font-size:13px;
+  color:var(--muted);
   margin:6px 0 12px;
 }
 
-/* ✅ FIX: stage uses safe visual viewport height & keeps content centered */
 .stage{
-  position:relative;
-  width:min(720px, 100%);
-  height:min(78svh, 720px);
-  margin:0 auto;
+  width:min(720px,100%);
+  height:min(78svh,720px);
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding: 10px 0;
+  align-items:center;
+  margin:0 auto;
 }
 
 .envelopeGroup{
   position:relative;
-  width:min(560px, 94vw);
+  width:min(560px,94vw);
   height:360px;
 }
 
-/* ✅ FIX: letter is centered in the stage once opened (no huge whitespace) */
+/* Letter positioning */
 .letterOut{
   position:absolute;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%) translateY(18px);
-  width:min(720px, 96vw);
-  max-width:720px;
+  width:min(720px,96vw);
   opacity:0;
-  transition:opacity .35s ease, transform .55s ease;
-  z-index:5;
+  transition:.5s ease;
   pointer-events:none;
+  z-index:5;
 }
 .open .letterOut{
   opacity:1;
-  transform:translate(-50%,-50%) translateY(0);
+  transform:translate(-50%,-50%);
   pointer-events:auto;
 }
 
-/* Letter page */
 .letterPage{
-  background:
-    radial-gradient(circle at 18% 18%, rgba(225,29,72,.05), transparent 52%),
-    radial-gradient(circle at 85% 70%, rgba(190,18,60,.05), transparent 55%),
-    linear-gradient(180deg, #ffffff, #fff7f8);
+  background:linear-gradient(180deg,#fff,#fff7f8);
   border:1px solid rgba(226,232,240,.95);
   border-radius:18px;
   box-shadow:0 16px 34px rgba(2,6,23,.10);
-  text-align:left;
-
-  /* ✅ FIX: safe height so she sees a framed letter (iPhone + Mac) */
-  max-height:min(68svh, 560px);
+  max-height:min(68svh,560px);
   overflow:auto;
-  -webkit-overflow-scrolling: touch;
-
-  position:relative;
-  padding:18px 16px;
+  padding:16px;
 }
 
-/* Inner content */
 .textArea{
-  padding:16px 18px;
-  background:rgba(255,255,255,.78);
+  background:rgba(255,255,255,.85);
   border-radius:14px;
+  padding:16px;
   border:1px solid rgba(226,232,240,.65);
-  position:relative;
 }
 
 .title{
   font-family:"Cormorant Garamond",serif;
-  font-weight:700;
   font-size:30px;
-  color:#0b1220;
-  margin:0;
-  text-align:center;
-}
-.withLove{
-  font-family:"Cormorant Garamond",serif;
-  font-weight:600;
-  font-size:18px;
-  margin:4px 0 12px;
+  font-weight:700;
   text-align:center;
 }
 
-/* Typewriter area */
+.withLove{
+  font-family:"Cormorant Garamond",serif;
+  font-size:18px;
+  text-align:center;
+  margin-bottom:12px;
+}
+
 .sub{
   font-family:"Cormorant Garamond",serif;
   font-size:20px;
   line-height:1.65;
-  color:#334155;
   white-space:pre-line;
-  margin:0 0 14px;
   min-height:160px;
+  color:#334155;
 }
 
-/* Blinking cursor for typewriter */
 .cursor{
   display:inline-block;
-  width:8px;
-  margin-left:2px;
-  border-right:2px solid rgba(71,85,105,.8);
-  transform:translateY(2px);
-  animation: blink 1s steps(1,end) infinite;
+  border-right:2px solid #64748b;
+  animation:blink 1s infinite;
 }
-@keyframes blink { 50% { opacity:0; } }
+@keyframes blink{50%{opacity:0}}
 
-.question{
-  margin:12px 0 0;
-  font-size:18px;
-  line-height:1.65;
-  color:#0f172a;
-  font-weight:650;
-}
-.soft{
+.microHint{
   margin-top:8px;
   font-size:13px;
   color:#64748b;
   font-weight:600;
   text-align:center;
+  opacity:0;
+  transition:.6s ease;
+}
+.microHint.show{opacity:1}
+
+.question{
+  margin-top:12px;
+  font-size:18px;
+  font-weight:650;
+}
+
+.soft{
+  font-size:13px;
+  color:#64748b;
+  text-align:center;
 }
 
 .actions{
   display:flex;
-  gap:14px;
   justify-content:center;
+  gap:14px;
   margin-top:16px;
   flex-wrap:wrap;
 }
@@ -189,71 +173,60 @@ body{
   border-radius:14px;
   font-weight:800;
   font-size:16px;
-  cursor:pointer;
   border:none;
+  cursor:pointer;
   min-width:140px;
 }
-.yes{ background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; }
-.no{ background:#f1f5f9; border:1px solid rgba(226,232,240,.95); }
-.no.moving{ transition:transform .18s ease; }
+.yes{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.no{background:#f1f5f9;border:1px solid #e2e8f0}
+.no.moving{transition:.18s}
 
 .hint{
   font-size:13px;
-  color:var(--muted);
   min-height:18px;
   margin-top:10px;
-  text-align:center;
+  color:var(--muted);
 }
 
-/* Result / GIF area */
 .result{
   display:none;
   margin-top:16px;
   padding:14px;
   border-radius:16px;
-  background:rgba(248,250,252,.92);
-  border:1px solid rgba(226,232,240,.95);
-}
-#resultText{
-  margin:12px 0 0;
-  line-height:1.65;
-  font-weight:650;
-  color:var(--text);
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
 }
 
-/* Vibe chooser */
+.scrollHint{
+  font-size:13px;
+  font-weight:700;
+  color:#475569;
+  opacity:0;
+  transition:.4s;
+}
+.scrollHint.show{opacity:1}
+
 .vibeWrap{
   display:none;
   margin-top:14px;
+  border-top:1px solid #e2e8f0;
   padding-top:14px;
-  border-top:1px solid rgba(226,232,240,.9);
 }
-.vibeTitle{
-  font-weight:800;
-  color:#0f172a;
-  margin:0 0 10px;
-  text-align:center;
-}
+
 .vibeBtns{
   display:flex;
   gap:10px;
-  flex-wrap:wrap;
   justify-content:center;
+  flex-wrap:wrap;
 }
+
 .vibeBtn{
-  border:1px solid rgba(226,232,240,.95);
-  background:white;
+  border:1px solid #e2e8f0;
   border-radius:999px;
   padding:10px 14px;
-  cursor:pointer;
+  background:#fff;
   font-weight:800;
-}
-.vibeBtn:hover{ background:#f8fafc; }
-.vibeNote{
-  margin:10px 0 0;
-  color:#475569;
-  font-weight:700;
-  text-align:center;
+  cursor:pointer;
 }
 
 /* Envelope */
@@ -264,15 +237,10 @@ body{
   height:260px;
   border-radius:18px;
   cursor:pointer;
-  overflow:hidden;
-  z-index:20;
-  background:
-    radial-gradient(circle at 20% 18%, rgba(190,18,60,.10), rgba(190,18,60,0) 52%),
-    radial-gradient(circle at 82% 70%, rgba(190,18,60,.08), rgba(190,18,60,0) 55%),
-    linear-gradient(135deg, var(--envBlush), var(--envPaper));
-  border:1px solid rgba(226,232,240,.92);
+  background:linear-gradient(135deg,var(--envBlush),var(--envPaper));
+  border:1px solid #e2e8f0;
   box-shadow:0 18px 42px rgba(2,6,23,.12);
-  transition:opacity .45s ease, transform .7s ease;
+  transition:.6s ease;
 }
 .open .envelope{
   opacity:0;
@@ -286,104 +254,65 @@ body{
   left:50%;
   transform:translateX(-50%);
   font-family:"Dancing Script",cursive;
-  font-size:46px;
+  font-size:44px;
   color:#b1123a;
-  text-shadow:0 2px 10px rgba(0,0,0,.08);
-  pointer-events:none;
-  z-index:6;
-  white-space:nowrap;
 }
+
 .flap{
   position:absolute;
   top:-10px;
-  left:0; right:0;
-  width:0;height:0;
+  left:0;right:0;
   margin:auto;
+  width:0;height:0;
   border-left:280px solid transparent;
   border-right:280px solid transparent;
   border-top:170px solid rgba(190,18,60,.14);
-  transform-origin:top center;
-  transition:transform .7s ease;
-  z-index:7;
-  filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
+  transition:.7s;
 }
-.open .flap{ transform:rotateX(180deg); }
+.open .flap{transform:rotateX(180deg)}
 
 .seal{
   position:absolute;
   left:50%;
   top:176px;
   transform:translateX(-50%);
-  width:20px;
-  height:20px;
+  width:20px;height:20px;
   border-radius:999px;
-  z-index:4;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 45% 40%, rgba(255,255,255,.05), rgba(255,255,255,0) 55%),
-    radial-gradient(circle at 70% 75%, rgba(0,0,0,.22), rgba(0,0,0,0) 60%),
-    linear-gradient(145deg, #4c0414, var(--wax));
-  box-shadow:
-    0 6px 10px rgba(2,6,23,.14),
-    inset 0 -6px 9px rgba(0,0,0,.28);
-  border:1px solid rgba(0,0,0,.10);
-  opacity:.95;
+  background:linear-gradient(145deg,#4c0414,var(--wax));
 }
 
-/* Tulips: pinned in corners, never overlap text */
+/* Tulips */
 .tulip{
   position:absolute;
   font-size:26px;
   opacity:.55;
-  user-select:none;
   cursor:pointer;
-  z-index:3;
 }
-.tulip:hover{ opacity:.75; }
-.t1{ top:10px; left:10px; }
-.t2{ top:10px; right:10px; }
-.t3{ bottom:10px; left:10px; }
-.t4{ bottom:10px; right:10px; }
+.t1{top:10px;left:10px}
+.t2{top:10px;right:10px}
+.t3{bottom:10px;left:10px}
+.t4{bottom:10px;right:10px}
 
-/* Toast */
 .toast{
   position:fixed;
   left:50%;
-  bottom: max(18px, env(safe-area-inset-bottom));
+  bottom:20px;
   transform:translateX(-50%);
-  background:rgba(15,23,42,.92);
-  color:white;
+  background:#0f172a;
+  color:#fff;
   padding:10px 14px;
   border-radius:999px;
   font-weight:800;
   font-size:13px;
-  box-shadow:0 12px 30px rgba(2,6,23,.22);
   opacity:0;
-  pointer-events:none;
-  transition:opacity .25s ease, transform .25s ease;
-  z-index:9999;
+  transition:.25s;
 }
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(-6px);
-}
-
-/* Mobile tweaks */
-@media (max-width:420px){
-  .card{ padding:14px; }
-  .toName{ font-size:40px; }
-  .btn{ min-width:130px; }
-  .textArea{ padding:14px 14px; }
-  .sub{ font-size:19px; min-height:170px; }
-  .letterPage{ padding:14px 12px; }
-  :root{ --envDrop: 60px; }
-}
+.toast.show{opacity:1}
 
 footer{
   margin-top:12px;
   font-size:12px;
   color:var(--muted);
-  text-align:center;
 }
 </style>
 </head>
@@ -395,21 +324,19 @@ footer{
   <div class="stage">
     <div class="envelopeGroup" id="scene">
 
-      <!-- LETTER -->
       <div class="letterOut">
-        <div class="letterPage" id="letterPage">
-
-          <!-- Tulips (tap notes) -->
-          <div class="tulip t1" data-note="Me encanta tu energía. 🌷">🌷</div>
-          <div class="tulip t2" data-note="I’m proud of the woman you are.">🌷</div>
-          <div class="tulip t3" data-note="Sin presión. Solo bonito.">🌷</div>
-          <div class="tulip t4" data-note="Gracias por leer esto con el corazón.">🌷</div>
+        <div class="letterPage">
+          <div class="tulip t1" data-note="Me encanta tu energía 🌷">🌷</div>
+          <div class="tulip t2" data-note="Gracias por leer con el corazón">🌷</div>
+          <div class="tulip t3" data-note="Sin presión, solo bonito">🌷</div>
+          <div class="tulip t4" data-note="Te aprecio">🌷</div>
 
           <div class="textArea">
             <div class="title">To Jaymis</div>
             <div class="withLove">Con cariño,</div>
 
-            <div class="sub" id="spanishMsg"><span class="cursor" aria-hidden="true"></span></div>
+            <div class="sub" id="spanishMsg"><span class="cursor"></span></div>
+            <p class="microHint" id="tulipHint">🌷 Tip: tap the tulips for little surprises</p>
 
             <p class="question">
               <strong>Jaymis</strong>, would you like to be my Valentine and do me the honor of letting me take you out on Valentine’s Day? 💝
@@ -417,39 +344,32 @@ footer{
             <p class="soft">No pressure — just honesty.</p>
 
             <div class="actions">
-              <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
-              <button class="btn no" id="noBtn" type="button">No 🙈</button>
+              <button class="btn yes" id="yesBtn">Yes 💘</button>
+              <button class="btn no" id="noBtn">No 🙈</button>
             </div>
 
             <div class="hint" id="hint"></div>
 
             <div class="result" id="result">
+              <p class="scrollHint" id="scrollHint">⬇️ Scroll down</p>
+
               <div id="yesGif" style="display:none">
-                <div class="tenor-gif-embed"
-                     data-postid="15931245853859273114"
-                     data-share-method="host"
-                     data-aspect-ratio="1"
-                     data-width="100%"></div>
+                <div class="tenor-gif-embed" data-postid="15931245853859273114" data-share-method="host" data-width="100%"></div>
               </div>
 
               <div id="noGif" style="display:none">
-                <div class="tenor-gif-embed"
-                     data-postid="17099042"
-                     data-share-method="host"
-                     data-aspect-ratio="1.28514"
-                     data-width="100%"></div>
+                <div class="tenor-gif-embed" data-postid="17099042" data-share-method="host" data-width="100%"></div>
               </div>
 
               <p id="resultText"></p>
 
               <div class="vibeWrap" id="vibeWrap">
-                <p class="vibeTitle">One more thing… pick the vibe ✨</p>
+                <p><strong>One more thing… pick the vibe ✨</strong></p>
                 <div class="vibeBtns">
-                  <button class="vibeBtn" type="button" data-vibe="🌙 Cozy & calm">🌙 Cozy</button>
-                  <button class="vibeBtn" type="button" data-vibe="🍷 Dinner">🍷 Dinner</button>
-                  <button class="vibeBtn" type="button" data-vibe="🎡 Something new">🎡 Something new</button>
+                  <button class="vibeBtn" data-vibe="🌙 Cozy">🌙 Cozy</button>
+                  <button class="vibeBtn" data-vibe="🍷 Dinner">🍷 Dinner</button>
+                  <button class="vibeBtn" data-vibe="🎡 Something new">🎡 Something new</button>
                 </div>
-                <p class="vibeNote" id="vibeNote"></p>
               </div>
             </div>
 
@@ -457,8 +377,7 @@ footer{
         </div>
       </div>
 
-      <!-- ENVELOPE -->
-      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
+      <div class="envelope" id="envelope">
         <div class="toName">Jaymis</div>
         <div class="flap"></div>
         <div class="seal"></div>
@@ -473,206 +392,84 @@ footer{
 <div class="toast" id="toast"></div>
 
 <script>
-/* Formspree */
-const FORMSPREE_URL = "https://formspree.io/f/xvzqepyk";
-let sentYes=false, sentNo=false, sentVibe=false;
-
-async function sendToFormspree(payload){
-  try{
-    const res = await fetch(FORMSPREE_URL, {
-      method: "POST",
-      headers: { "Accept":"application/json", "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
-    if(!res.ok) console.warn("Formspree failed:", res.status, await res.text());
-  }catch(err){
-    console.warn("Formspree error:", err);
-  }
-}
-async function sendChoice(choice){
-  await sendToFormspree({
-    choice,
-    page: window.location.href,
-    time: new Date().toISOString(),
-    userAgent: navigator.userAgent
-  });
-}
-async function sendVibe(vibe){
-  await sendToFormspree({
-    choice: "YES_VIBE",
-    vibe,
-    page: window.location.href,
-    time: new Date().toISOString()
-  });
-}
-
-/* Envelope open + typewriter */
-const envelope = document.getElementById("envelope");
-const scene = document.getElementById("scene");
-const spanishMsgEl = document.getElementById("spanishMsg");
-const FULL_SPANISH =
-`Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
+const FORMSPREE_URL="https://formspree.io/f/xvzqepyk";
+const spanishText=`Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
 Disfruto conversar, salir y descubrir planes sin presión.
 
 Quiero que sepas que aquí hay alguien que te aprecia, te respeta y valora tu compañía.
 
 Así que…`;
 
-let opened=false;
-let typed=false;
+const scene=document.getElementById("scene");
+const envelope=document.getElementById("envelope");
+const spanishMsg=document.getElementById("spanishMsg");
+const tulipHint=document.getElementById("tulipHint");
+const scrollHint=document.getElementById("scrollHint");
+const toast=document.getElementById("toast");
 
-function typeWriter(text, el, speed=16){
-  if(typed) return;
+let opened=false,typed=false;
+
+function typeWriter(){
+  if(typed)return;
   typed=true;
-
-  // keep cursor while typing
-  const cursor = el.querySelector(".cursor");
-  el.textContent = "";
-  if(cursor) el.appendChild(cursor);
-
+  spanishMsg.textContent="";
   let i=0;
+  const cursor=document.querySelector(".cursor");
   const timer=setInterval(()=>{
-    const ch = text[i] ?? "";
-    if(cursor){
-      cursor.insertAdjacentText("beforebegin", ch);
-    }else{
-      el.textContent += ch;
-    }
+    spanishMsg.insertBefore(document.createTextNode(spanishText[i]||""),cursor);
     i++;
-    if(i>=text.length){
+    if(i>=spanishText.length){
       clearInterval(timer);
-      // remove cursor after finished
-      setTimeout(()=>{ cursor && cursor.remove(); }, 450);
+      cursor.remove();
+      tulipHint.classList.add("show");
     }
-  }, speed);
+  },15);
 }
 
-function openEnvelope(){
-  if(opened) return;
+envelope.onclick=()=>{
+  if(opened)return;
   opened=true;
   scene.classList.add("open");
-  setTimeout(()=> typeWriter(FULL_SPANISH, spanishMsgEl, 15), 220);
-}
+  setTimeout(typeWriter,250);
+};
 
-envelope.addEventListener("click", openEnvelope);
-envelope.addEventListener("touchstart", openEnvelope, { passive:true });
-envelope.addEventListener("keydown", (e)=> {
-  if(e.key==="Enter" || e.key===" ") openEnvelope();
-});
-
-/* Tulip notes */
-const toast = document.getElementById("toast");
-let toastTimer=null;
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>toast.classList.remove("show"), 1600);
-}
 document.querySelectorAll(".tulip").forEach(t=>{
-  t.addEventListener("click", ()=> showToast(t.dataset.note || "🌷"));
-  t.addEventListener("touchstart", ()=> showToast(t.dataset.note || "🌷"), { passive:true });
+  t.onclick=()=>{
+    toast.textContent=t.dataset.note;
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"),1500);
+  };
 });
 
-/* Buttons */
-const yesBtn=document.getElementById("yesBtn");
-const noBtn=document.getElementById("noBtn");
-const hint=document.getElementById("hint");
-const result=document.getElementById("result");
-const yesGif=document.getElementById("yesGif");
-const noGif=document.getElementById("noGif");
-const resultText=document.getElementById("resultText");
-const vibeWrap=document.getElementById("vibeWrap");
-const vibeNote=document.getElementById("vibeNote");
-
-const YES_MESSAGE =
-  "La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
-const NO_MESSAGE =
-  "Thank you for being honest. I respect your decision.";
-
-function celebrate(){
-  if(typeof confetti !== "function") return;
-  confetti({ particleCount:120, spread:90, origin:{ y:0.62 }});
-  setTimeout(()=>confetti({ particleCount:80, spread:75, origin:{ y:0.62 }}), 180);
+async function send(data){
+  fetch(FORMSPREE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
 }
 
-yesBtn.addEventListener("click", async ()=>{
-  result.style.display="block";
-  yesGif.style.display="block";
-  noGif.style.display="none";
-  resultText.textContent="❤️ " + YES_MESSAGE;
-  hint.textContent="";
-  celebrate();
+document.getElementById("yesBtn").onclick=()=>{
+  document.getElementById("result").style.display="block";
+  document.getElementById("yesGif").style.display="block";
+  document.getElementById("resultText").textContent="❤️ La mejor elección de tu vida.";
+  document.getElementById("vibeWrap").style.display="block";
+  scrollHint.classList.add("show");
+  setTimeout(()=>scrollHint.classList.remove("show"),5000);
+  confetti({particleCount:120,spread:90});
+  send({choice:"YES"});
+};
 
-  vibeWrap.style.display="block";
-  vibeNote.textContent="Pick what feels most you.";
-
-  if(!sentYes){
-    sentYes=true;
-    await sendChoice("YES");
+let dodges=0;
+document.getElementById("noBtn").onclick=(e)=>{
+  if(dodges<5){
+    e.target.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*80-40}px)`;
+    dodges++;
+  }else{
+    document.getElementById("result").style.display="block";
+    document.getElementById("noGif").style.display="block";
+    document.getElementById("resultText").textContent="Thank you for being honest.";
+    scrollHint.classList.add("show");
+    setTimeout(()=>scrollHint.classList.remove("show"),5000);
+    send({choice:"NO"});
   }
-});
-
-document.querySelectorAll(".vibeBtn").forEach(btn=>{
-  btn.addEventListener("click", async ()=>{
-    const vibe = btn.dataset.vibe;
-    vibeNote.textContent = `Perfect. ${vibe} — noted.`;
-    showToast("Noted ✨");
-    if(!sentVibe){
-      sentVibe=true;
-      await sendVibe(vibe);
-    }
-  });
-});
-
-/* No button dodges */
-let dodgeCount=0;
-const MAX_DODGES=5;
-
-function dodge(){
-  const x = Math.random()*220 - 110;
-  const y = Math.random()*90 - 45;
-  noBtn.classList.add("moving");
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
-  setTimeout(()=>noBtn.classList.remove("moving"), 200);
-
-  const lines = [
-    "😅 Take your time…",
-    "No pressure.",
-    "Honesty > pressure.",
-    "Whatever you choose, I’ll respect it."
-  ];
-  hint.textContent = lines[Math.min(dodgeCount, lines.length-1)];
-}
-
-noBtn.addEventListener("mouseenter", ()=>{
-  if(dodgeCount < MAX_DODGES){ dodgeCount++; dodge(); }
-});
-noBtn.addEventListener("touchstart", (e)=>{
-  if(dodgeCount < MAX_DODGES){
-    e.preventDefault();
-    dodgeCount++;
-    dodge();
-  }
-}, { passive:false });
-
-noBtn.addEventListener("click", async ()=>{
-  if(dodgeCount < MAX_DODGES){ dodgeCount++; dodge(); return; }
-
-  noBtn.style.transform="translate(0,0)";
-  result.style.display="block";
-  noGif.style.display="block";
-  yesGif.style.display="none";
-  resultText.textContent="😔 " + NO_MESSAGE;
-
-  vibeWrap.style.display="none";
-  vibeNote.textContent="";
-
-  if(!sentNo){
-    sentNo=true;
-    await sendChoice("NO");
-  }
-});
+};
 </script>
 </body>
 </html>
