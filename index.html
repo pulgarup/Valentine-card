@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>For Jaymis 💌</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
@@ -20,28 +20,31 @@
   --envBlush:#ffe4e6;
   --envPaper:#ffffff;
   --wax:#5f061a;
-
-  --envDrop: 80px;
+  --envDrop: 70px;
 }
 
 *{box-sizing:border-box}
 
+html,body{ height:100%; }
 body{
   margin:0;
-  min-height:100vh;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   background: linear-gradient(135deg,var(--bg1),var(--bg2));
   display:flex;
   align-items:center;
   justify-content:center;
   padding:18px;
+  padding-left: max(18px, env(safe-area-inset-left));
+  padding-right:max(18px, env(safe-area-inset-right));
+  padding-top:  max(18px, env(safe-area-inset-top));
+  padding-bottom:max(18px, env(safe-area-inset-bottom));
 }
 
 .card{
   width:min(980px,100%);
   background:white;
   border-radius:22px;
-  padding:18px;
+  padding:16px;
   box-shadow:0 22px 55px rgba(2,6,23,.12);
   border:1px solid rgba(226,232,240,.9);
   overflow:hidden;
@@ -51,18 +54,19 @@ body{
 .tapHint{
   color:var(--muted);
   font-size:13px;
-  margin:6px 0 10px;
+  margin:6px 0 12px;
 }
 
+/* ✅ FIX: stage uses safe visual viewport height & keeps content centered */
 .stage{
   position:relative;
-  width:min(680px, 100%);
-  height:min(82vh, 720px);
+  width:min(720px, 100%);
+  height:min(78svh, 720px);
   margin:0 auto;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding: 12px 0;
+  padding: 10px 0;
 }
 
 .envelopeGroup{
@@ -71,25 +75,26 @@ body{
   height:360px;
 }
 
-/* Letter */
+/* ✅ FIX: letter is centered in the stage once opened (no huge whitespace) */
 .letterOut{
   position:absolute;
-  inset:0;
-  margin:auto;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) translateY(18px);
   width:min(720px, 96vw);
   max-width:720px;
   opacity:0;
-  transform:translateY(14px);
-  transition:opacity .35s ease, transform .65s ease;
+  transition:opacity .35s ease, transform .55s ease;
   z-index:5;
   pointer-events:none;
 }
 .open .letterOut{
   opacity:1;
-  transform:translateY(0);
+  transform:translate(-50%,-50%) translateY(0);
   pointer-events:auto;
 }
 
+/* Letter page */
 .letterPage{
   background:
     radial-gradient(circle at 18% 18%, rgba(225,29,72,.05), transparent 52%),
@@ -99,15 +104,19 @@ body{
   border-radius:18px;
   box-shadow:0 16px 34px rgba(2,6,23,.10);
   text-align:left;
-  padding:24px 20px;
-  max-height:min(74vh, 600px);
+
+  /* ✅ FIX: safe height so she sees a framed letter (iPhone + Mac) */
+  max-height:min(68svh, 560px);
   overflow:auto;
   -webkit-overflow-scrolling: touch;
+
   position:relative;
+  padding:18px 16px;
 }
 
+/* Inner content */
 .textArea{
-  padding:18px 24px;
+  padding:16px 18px;
   background:rgba(255,255,255,.78);
   border-radius:14px;
   border:1px solid rgba(226,232,240,.65);
@@ -126,9 +135,11 @@ body{
   font-family:"Cormorant Garamond",serif;
   font-weight:600;
   font-size:18px;
-  margin:4px 0 14px;
+  margin:4px 0 12px;
   text-align:center;
 }
+
+/* Typewriter area */
 .sub{
   font-family:"Cormorant Garamond",serif;
   font-size:20px;
@@ -136,8 +147,19 @@ body{
   color:#334155;
   white-space:pre-line;
   margin:0 0 14px;
-  min-height:160px; /* helps layout while typing */
+  min-height:160px;
 }
+
+/* Blinking cursor for typewriter */
+.cursor{
+  display:inline-block;
+  width:8px;
+  margin-left:2px;
+  border-right:2px solid rgba(71,85,105,.8);
+  transform:translateY(2px);
+  animation: blink 1s steps(1,end) infinite;
+}
+@keyframes blink { 50% { opacity:0; } }
 
 .question{
   margin:12px 0 0;
@@ -158,7 +180,7 @@ body{
   display:flex;
   gap:14px;
   justify-content:center;
-  margin-top:18px;
+  margin-top:16px;
   flex-wrap:wrap;
 }
 
@@ -186,20 +208,20 @@ body{
 /* Result / GIF area */
 .result{
   display:none;
-  margin-top:18px;
-  padding:16px;
+  margin-top:16px;
+  padding:14px;
   border-radius:16px;
   background:rgba(248,250,252,.92);
   border:1px solid rgba(226,232,240,.95);
 }
 #resultText{
-  margin:14px 0 0;
+  margin:12px 0 0;
   line-height:1.65;
   font-weight:650;
   color:var(--text);
 }
 
-/* ✅ Vibe chooser */
+/* Vibe chooser */
 .vibeWrap{
   display:none;
   margin-top:14px;
@@ -210,6 +232,7 @@ body{
   font-weight:800;
   color:#0f172a;
   margin:0 0 10px;
+  text-align:center;
 }
 .vibeBtns{
   display:flex;
@@ -249,7 +272,7 @@ body{
     linear-gradient(135deg, var(--envBlush), var(--envPaper));
   border:1px solid rgba(226,232,240,.92);
   box-shadow:0 18px 42px rgba(2,6,23,.12);
-  transition:opacity .4s ease, transform .6s ease;
+  transition:opacity .45s ease, transform .7s ease;
 }
 .open .envelope{
   opacity:0;
@@ -307,7 +330,7 @@ body{
   opacity:.95;
 }
 
-/* ✅ Tulips (tap notes) — pinned OUTSIDE text so they never overlap words */
+/* Tulips: pinned in corners, never overlap text */
 .tulip{
   position:absolute;
   font-size:26px;
@@ -322,11 +345,11 @@ body{
 .t3{ bottom:10px; left:10px; }
 .t4{ bottom:10px; right:10px; }
 
-/* Toast for tulip notes */
+/* Toast */
 .toast{
   position:fixed;
   left:50%;
-  bottom:18px;
+  bottom: max(18px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   background:rgba(15,23,42,.92);
   color:white;
@@ -345,16 +368,19 @@ body{
   transform:translateX(-50%) translateY(-6px);
 }
 
+/* Mobile tweaks */
 @media (max-width:420px){
+  .card{ padding:14px; }
   .toName{ font-size:40px; }
   .btn{ min-width:130px; }
-  .textArea{ padding:16px 16px; }
+  .textArea{ padding:14px 14px; }
   .sub{ font-size:19px; min-height:170px; }
+  .letterPage{ padding:14px 12px; }
   :root{ --envDrop: 60px; }
 }
 
 footer{
-  margin-top:14px;
+  margin-top:12px;
   font-size:12px;
   color:var(--muted);
   text-align:center;
@@ -373,7 +399,7 @@ footer{
       <div class="letterOut">
         <div class="letterPage" id="letterPage">
 
-          <!-- ✅ Tulips (tap notes) -->
+          <!-- Tulips (tap notes) -->
           <div class="tulip t1" data-note="Me encanta tu energía. 🌷">🌷</div>
           <div class="tulip t2" data-note="I’m proud of the woman you are.">🌷</div>
           <div class="tulip t3" data-note="Sin presión. Solo bonito.">🌷</div>
@@ -383,8 +409,7 @@ footer{
             <div class="title">To Jaymis</div>
             <div class="withLove">Con cariño,</div>
 
-            <!-- ✅ Typewriter message target -->
-            <div class="sub" id="spanishMsg"></div>
+            <div class="sub" id="spanishMsg"><span class="cursor" aria-hidden="true"></span></div>
 
             <p class="question">
               <strong>Jaymis</strong>, would you like to be my Valentine and do me the honor of letting me take you out on Valentine’s Day? 💝
@@ -417,7 +442,6 @@ footer{
 
               <p id="resultText"></p>
 
-              <!-- ✅ Vibe chooser after YES -->
               <div class="vibeWrap" id="vibeWrap">
                 <p class="vibeTitle">One more thing… pick the vibe ✨</p>
                 <div class="vibeBtns">
@@ -449,13 +473,9 @@ footer{
 <div class="toast" id="toast"></div>
 
 <script>
-/* ✅ Formspree endpoint */
+/* Formspree */
 const FORMSPREE_URL = "https://formspree.io/f/xvzqepyk";
-
-/* ✅ Prevent double-sends */
-let sentYes = false;
-let sentNo  = false;
-let sentVibe = false;
+let sentYes=false, sentNo=false, sentVibe=false;
 
 async function sendToFormspree(payload){
   try{
@@ -464,14 +484,11 @@ async function sendToFormspree(payload){
       headers: { "Accept":"application/json", "Content-Type":"application/json" },
       body: JSON.stringify(payload)
     });
-    if(!res.ok){
-      console.warn("Formspree failed:", res.status, await res.text());
-    }
+    if(!res.ok) console.warn("Formspree failed:", res.status, await res.text());
   }catch(err){
     console.warn("Formspree error:", err);
   }
 }
-
 async function sendChoice(choice){
   await sendToFormspree({
     choice,
@@ -480,7 +497,6 @@ async function sendChoice(choice){
     userAgent: navigator.userAgent
   });
 }
-
 async function sendVibe(vibe){
   await sendToFormspree({
     choice: "YES_VIBE",
@@ -490,10 +506,9 @@ async function sendVibe(vibe){
   });
 }
 
-/* Envelope open + Typewriter (A) */
+/* Envelope open + typewriter */
 const envelope = document.getElementById("envelope");
 const scene = document.getElementById("scene");
-
 const spanishMsgEl = document.getElementById("spanishMsg");
 const FULL_SPANISH =
 `Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
@@ -506,20 +521,28 @@ Así que…`;
 let opened=false;
 let typed=false;
 
-function typeWriter(text, el, speed=18){
+function typeWriter(text, el, speed=16){
   if(typed) return;
-  typed = true;
+  typed=true;
+
+  // keep cursor while typing
+  const cursor = el.querySelector(".cursor");
   el.textContent = "";
-  let i = 0;
+  if(cursor) el.appendChild(cursor);
 
-  const timer = setInterval(() => {
-    el.textContent += text[i] ?? "";
+  let i=0;
+  const timer=setInterval(()=>{
+    const ch = text[i] ?? "";
+    if(cursor){
+      cursor.insertAdjacentText("beforebegin", ch);
+    }else{
+      el.textContent += ch;
+    }
     i++;
-    // subtle auto-scroll inside letter if needed
-    el.closest(".letterPage")?.scrollTo({ top: 0 });
-
-    if(i >= text.length){
+    if(i>=text.length){
       clearInterval(timer);
+      // remove cursor after finished
+      setTimeout(()=>{ cursor && cursor.remove(); }, 450);
     }
   }, speed);
 }
@@ -528,8 +551,7 @@ function openEnvelope(){
   if(opened) return;
   opened=true;
   scene.classList.add("open");
-  // start typing after a small delay so it feels intentional
-  setTimeout(() => typeWriter(FULL_SPANISH, spanishMsgEl, 16), 250);
+  setTimeout(()=> typeWriter(FULL_SPANISH, spanishMsgEl, 15), 220);
 }
 
 envelope.addEventListener("click", openEnvelope);
@@ -538,34 +560,30 @@ envelope.addEventListener("keydown", (e)=> {
   if(e.key==="Enter" || e.key===" ") openEnvelope();
 });
 
-/* Tulip tap notes (D) */
+/* Tulip notes */
 const toast = document.getElementById("toast");
-let toastTimer = null;
-
+let toastTimer=null;
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> toast.classList.remove("show"), 1600);
+  toastTimer=setTimeout(()=>toast.classList.remove("show"), 1600);
 }
-
-document.querySelectorAll(".tulip").forEach(t => {
-  t.addEventListener("click", () => showToast(t.dataset.note || "🌷"));
-  t.addEventListener("touchstart", () => showToast(t.dataset.note || "🌷"), { passive:true });
+document.querySelectorAll(".tulip").forEach(t=>{
+  t.addEventListener("click", ()=> showToast(t.dataset.note || "🌷"));
+  t.addEventListener("touchstart", ()=> showToast(t.dataset.note || "🌷"), { passive:true });
 });
 
-/* Buttons + GIFs + Formspree + vibe (C) */
+/* Buttons */
 const yesBtn=document.getElementById("yesBtn");
 const noBtn=document.getElementById("noBtn");
 const hint=document.getElementById("hint");
-
 const result=document.getElementById("result");
 const yesGif=document.getElementById("yesGif");
 const noGif=document.getElementById("noGif");
 const resultText=document.getElementById("resultText");
-
-const vibeWrap = document.getElementById("vibeWrap");
-const vibeNote = document.getElementById("vibeNote");
+const vibeWrap=document.getElementById("vibeWrap");
+const vibeNote=document.getElementById("vibeNote");
 
 const YES_MESSAGE =
   "La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
@@ -586,32 +604,28 @@ yesBtn.addEventListener("click", async ()=>{
   hint.textContent="";
   celebrate();
 
-  // show vibe chooser (C)
-  vibeWrap.style.display = "block";
-  vibeNote.textContent = "Pick what feels most you.";
+  vibeWrap.style.display="block";
+  vibeNote.textContent="Pick what feels most you.";
 
   if(!sentYes){
-    sentYes = true;
+    sentYes=true;
     await sendChoice("YES");
   }
 });
 
-// Vibe buttons
-document.querySelectorAll(".vibeBtn").forEach(btn => {
-  btn.addEventListener("click", async () => {
+document.querySelectorAll(".vibeBtn").forEach(btn=>{
+  btn.addEventListener("click", async ()=>{
     const vibe = btn.dataset.vibe;
     vibeNote.textContent = `Perfect. ${vibe} — noted.`;
     showToast("Noted ✨");
-
-    // send vibe once
     if(!sentVibe){
-      sentVibe = true;
+      sentVibe=true;
       await sendVibe(vibe);
     }
   });
 });
 
-/* No button dodges 5 times, then works */
+/* No button dodges */
 let dodgeCount=0;
 const MAX_DODGES=5;
 
@@ -634,7 +648,6 @@ function dodge(){
 noBtn.addEventListener("mouseenter", ()=>{
   if(dodgeCount < MAX_DODGES){ dodgeCount++; dodge(); }
 });
-
 noBtn.addEventListener("touchstart", (e)=>{
   if(dodgeCount < MAX_DODGES){
     e.preventDefault();
@@ -652,12 +665,11 @@ noBtn.addEventListener("click", async ()=>{
   yesGif.style.display="none";
   resultText.textContent="😔 " + NO_MESSAGE;
 
-  // hide vibe area if she says no
-  vibeWrap.style.display = "none";
-  vibeNote.textContent = "";
+  vibeWrap.style.display="none";
+  vibeNote.textContent="";
 
   if(!sentNo){
-    sentNo = true;
+    sentNo=true;
     await sendChoice("NO");
   }
 });
