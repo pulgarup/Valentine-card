@@ -21,7 +21,6 @@
   --envPaper:#ffffff;
   --wax:#5f061a;
 
-  /* How much the envelope moves away on open */
   --envDrop: 80px;
 }
 
@@ -72,7 +71,7 @@ body{
   height:360px;
 }
 
-/* ✅ LETTER is centered and hidden until open */
+/* LETTER */
 .letterOut{
   position:absolute;
   inset:0;
@@ -85,14 +84,12 @@ body{
   z-index:5;
   pointer-events:none;
 }
-
 .open .letterOut{
   opacity:1;
   transform:translateY(0);
   pointer-events:auto;
 }
 
-/* Letter page */
 .letterPage{
   background:
     radial-gradient(circle at 18% 18%, rgba(225,29,72,.05), transparent 52%),
@@ -123,7 +120,6 @@ body{
   margin:0;
   text-align:center;
 }
-
 .withLove{
   font-family:"Cormorant Garamond",serif;
   font-weight:600;
@@ -131,7 +127,6 @@ body{
   margin:4px 0 14px;
   text-align:center;
 }
-
 .sub{
   font-family:"Cormorant Garamond",serif;
   font-size:20px;
@@ -140,7 +135,6 @@ body{
   white-space:pre-line;
   margin:0 0 14px;
 }
-
 .question{
   margin:12px 0 0;
   font-size:18px;
@@ -148,7 +142,6 @@ body{
   color:#0f172a;
   font-weight:650;
 }
-
 .soft{
   margin-top:8px;
   font-size:13px;
@@ -203,7 +196,7 @@ body{
   color:var(--text);
 }
 
-/* ✅ ENVELOPE sits on top BEFORE open */
+/* ENVELOPE */
 .envelope{
   position:absolute;
   inset:0;
@@ -221,8 +214,6 @@ body{
   box-shadow:0 18px 42px rgba(2,6,23,.12);
   transition:opacity .4s ease, transform .6s ease;
 }
-
-/* ✅ On open: envelope moves down + fades away so it never blocks the letter */
 .open .envelope{
   opacity:0;
   transform:translateY(var(--envDrop));
@@ -242,7 +233,6 @@ body{
   z-index:6;
   white-space:nowrap;
 }
-
 .flap{
   position:absolute;
   top:-10px;
@@ -257,8 +247,6 @@ body{
   z-index:7;
   filter: drop-shadow(0 12px 10px rgba(0,0,0,.06));
 }
-
-/* flap still animates before fade */
 .open .flap{ transform:rotateX(180deg); }
 
 .seal{
@@ -306,7 +294,7 @@ footer{
   <div class="stage">
     <div class="envelopeGroup" id="scene">
 
-      <!-- ✅ LETTER (centered, appears after open) -->
+      <!-- LETTER -->
       <div class="letterOut">
         <div class="letterPage">
           <div class="textArea">
@@ -336,21 +324,28 @@ Así que…
 
             <div class="result" id="result">
               <div id="yesGif" style="display:none">
-                <div class="tenor-gif-embed" data-postid="15931245853859273114" data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>
+                <div class="tenor-gif-embed"
+                     data-postid="15931245853859273114"
+                     data-share-method="host"
+                     data-aspect-ratio="1"
+                     data-width="100%"></div>
               </div>
 
               <div id="noGif" style="display:none">
-                <div class="tenor-gif-embed" data-postid="17099042" data-share-method="host" data-aspect-ratio="1.28514" data-width="100%"></div>
+                <div class="tenor-gif-embed"
+                     data-postid="17099042"
+                     data-share-method="host"
+                     data-aspect-ratio="1.28514"
+                     data-width="100%"></div>
               </div>
 
               <p id="resultText"></p>
             </div>
-
           </div>
         </div>
       </div>
 
-      <!-- ✅ ENVELOPE (fades away after open) -->
+      <!-- ENVELOPE -->
       <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
         <div class="toName">Jaymis</div>
         <div class="flap"></div>
@@ -364,6 +359,41 @@ Así que…
 </main>
 
 <script>
+/* ✅ Formspree endpoint */
+const FORMSPREE_URL = "https://formspree.io/f/xvzqepyk";
+
+/* ✅ Prevent double-email if someone clicks multiple times */
+let sentYes = false;
+let sentNo  = false;
+
+async function sendChoiceEmail(choice){
+  // choice: "YES" or "NO"
+  try{
+    const payload = {
+      choice,
+      page: window.location.href,
+      time: new Date().toISOString(),
+      userAgent: navigator.userAgent
+    };
+
+    const res = await fetch(FORMSPREE_URL, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    // Optional: if something fails, you’ll see it in console
+    if(!res.ok){
+      console.warn("Formspree failed:", res.status, await res.text());
+    }
+  }catch(err){
+    console.warn("Formspree error:", err);
+  }
+}
+
 const envelope = document.getElementById("envelope");
 const scene = document.getElementById("scene");
 
@@ -373,7 +403,6 @@ function openEnvelope(){
   opened=true;
   scene.classList.add("open");
 }
-
 envelope.addEventListener("click", openEnvelope);
 envelope.addEventListener("touchstart", openEnvelope, { passive:true });
 envelope.addEventListener("keydown", (e)=> {
@@ -401,13 +430,18 @@ function celebrate(){
   setTimeout(()=>confetti({ particleCount:80, spread:75, origin:{ y:0.62 }}), 180);
 }
 
-yesBtn.addEventListener("click", ()=>{
+yesBtn.addEventListener("click", async ()=>{
   result.style.display="block";
   yesGif.style.display="block";
   noGif.style.display="none";
   resultText.textContent="❤️ " + YES_MESSAGE;
   hint.textContent="";
   celebrate();
+
+  if(!sentYes){
+    sentYes = true;
+    await sendChoiceEmail("YES");
+  }
 });
 
 // No button dodges 5 times, then works
@@ -435,13 +469,19 @@ noBtn.addEventListener("touchstart", (e)=>{
   }
 }, { passive:false });
 
-noBtn.addEventListener("click", ()=>{
+noBtn.addEventListener("click", async ()=>{
   if(dodgeCount < MAX_DODGES){ dodgeCount++; dodge(); return; }
+
   noBtn.style.transform="translate(0,0)";
   result.style.display="block";
   noGif.style.display="block";
   yesGif.style.display="none";
   resultText.textContent="😔 " + NO_MESSAGE;
+
+  if(!sentNo){
+    sentNo = true;
+    await sendChoiceEmail("NO");
+  }
 });
 </script>
 </body>
