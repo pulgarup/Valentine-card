@@ -98,6 +98,7 @@ body{
   max-height:min(68svh,560px);
   overflow:auto;
   padding:16px;
+  position:relative;
 }
 
 .textArea{
@@ -112,6 +113,7 @@ body{
   font-size:30px;
   font-weight:700;
   text-align:center;
+  color:#0b1220;
 }
 
 .withLove{
@@ -119,6 +121,7 @@ body{
   font-size:18px;
   text-align:center;
   margin-bottom:12px;
+  color:#0b1220;
 }
 
 .sub{
@@ -126,7 +129,7 @@ body{
   font-size:20px;
   line-height:1.65;
   white-space:pre-line;
-  min-height:160px;
+  min-height:220px; /* increased for longer message */
   color:#334155;
 }
 
@@ -152,6 +155,7 @@ body{
   margin-top:12px;
   font-size:18px;
   font-weight:650;
+  color:#0f172a;
 }
 
 .soft{
@@ -203,6 +207,8 @@ body{
   color:#475569;
   opacity:0;
   transition:.4s;
+  text-align:center;
+  margin:0 0 10px;
 }
 .scrollHint.show{opacity:1}
 
@@ -228,6 +234,7 @@ body{
   font-weight:800;
   cursor:pointer;
 }
+.vibeBtn:hover{ background:#f8fafc; }
 
 /* Envelope */
 .envelope{
@@ -241,6 +248,7 @@ body{
   border:1px solid #e2e8f0;
   box-shadow:0 18px 42px rgba(2,6,23,.12);
   transition:.6s ease;
+  overflow:hidden;
 }
 .open .envelope{
   opacity:0;
@@ -287,7 +295,9 @@ body{
   font-size:26px;
   opacity:.55;
   cursor:pointer;
+  user-select:none;
 }
+.tulip:hover{ opacity:.75; }
 .t1{top:10px;left:10px}
 .t2{top:10px;right:10px}
 .t3{bottom:10px;left:10px}
@@ -296,7 +306,7 @@ body{
 .toast{
   position:fixed;
   left:50%;
-  bottom: max(20px, env(safe-area-inset-bottom));
+  bottom:max(20px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   background:#0f172a;
   color:#fff;
@@ -306,6 +316,7 @@ body{
   font-size:13px;
   opacity:0;
   transition:.25s;
+  pointer-events:none;
 }
 .toast.show{opacity:1}
 
@@ -313,6 +324,11 @@ footer{
   margin-top:12px;
   font-size:12px;
   color:var(--muted);
+}
+
+@media (max-width:420px){
+  .toName{ font-size:40px; }
+  .sub{ min-height:240px; }
 }
 </style>
 </head>
@@ -326,16 +342,16 @@ footer{
 
       <div class="letterOut">
         <div class="letterPage">
-          <div class="tulip t1" data-note="Me encanta tu energía 🌷">🌷</div>
-          <div class="tulip t2" data-note="Gracias por leer con el corazón">🌷</div>
-          <div class="tulip t3" data-note="Sin presión, solo bonito">🌷</div>
-          <div class="tulip t4" data-note="Te aprecio">🌷</div>
+          <div class="tulip t1" data-note="🌷 Tip: tap the tulips">🌷</div>
+          <div class="tulip t2" data-note="Sin presión. Solo bonito.">🌷</div>
+          <div class="tulip t3" data-note="Gracias por leer con el corazón.">🌷</div>
+          <div class="tulip t4" data-note="I appreciate you.">🌷</div>
 
           <div class="textArea">
             <div class="title">To Jaymis</div>
             <div class="withLove">Con cariño,</div>
 
-            <div class="sub" id="spanishMsg"><span class="cursor"></span></div>
+            <div class="sub" id="spanishMsg"><span class="cursor" aria-hidden="true"></span></div>
             <p class="microHint" id="tulipHint">🌷 Tip: tap the tulips for little surprises</p>
 
             <p class="question">
@@ -344,8 +360,8 @@ footer{
             <p class="soft">No pressure — just honesty.</p>
 
             <div class="actions">
-              <button class="btn yes" id="yesBtn">Yes 💘</button>
-              <button class="btn no" id="noBtn">No 🙈</button>
+              <button class="btn yes" id="yesBtn" type="button">Yes 💘</button>
+              <button class="btn no" id="noBtn" type="button">No 🙈</button>
             </div>
 
             <div class="hint" id="hint"></div>
@@ -354,22 +370,29 @@ footer{
               <p class="scrollHint" id="scrollHint">⬇️ Scroll down</p>
 
               <div id="yesGif" style="display:none">
-                <div class="tenor-gif-embed" data-postid="15931245853859273114" data-share-method="host" data-width="100%"></div>
+                <div class="tenor-gif-embed"
+                     data-postid="15931245853859273114"
+                     data-share-method="host"
+                     data-width="100%"></div>
               </div>
 
               <div id="noGif" style="display:none">
-                <div class="tenor-gif-embed" data-postid="17099042" data-share-method="host" data-width="100%"></div>
+                <div class="tenor-gif-embed"
+                     data-postid="17099042"
+                     data-share-method="host"
+                     data-width="100%"></div>
               </div>
 
-              <p id="resultText"></p>
+              <p id="resultText" style="margin-top:10px;font-weight:800;"></p>
 
               <div class="vibeWrap" id="vibeWrap">
-                <p><strong>One more thing… pick the vibe ✨</strong></p>
+                <p style="text-align:center; margin:0 0 10px;"><strong>One more thing… pick the vibe ✨</strong></p>
                 <div class="vibeBtns">
-                  <button class="vibeBtn" data-vibe="🌙 Cozy">🌙 Cozy</button>
-                  <button class="vibeBtn" data-vibe="🍷 Dinner">🍷 Dinner</button>
-                  <button class="vibeBtn" data-vibe="🎡 Something new">🎡 Something new</button>
+                  <button class="vibeBtn" type="button" data-vibe="🌙 Cozy">🌙 Cozy</button>
+                  <button class="vibeBtn" type="button" data-vibe="🍷 Dinner">🍷 Dinner</button>
+                  <button class="vibeBtn" type="button" data-vibe="🎡 Something new">🎡 Something new</button>
                 </div>
+                <p id="vibeNote" style="text-align:center;color:#475569;font-weight:700;margin-top:10px;"></p>
               </div>
             </div>
 
@@ -377,7 +400,7 @@ footer{
         </div>
       </div>
 
-      <div class="envelope" id="envelope">
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open envelope">
         <div class="toName">Jaymis</div>
         <div class="flap"></div>
         <div class="seal"></div>
@@ -392,100 +415,231 @@ footer{
 <div class="toast" id="toast"></div>
 
 <script>
-const FORMSPREE_URL="https://formspree.io/f/xvzqepyk";
+/* ✅ Formspree */
+const FORMSPREE_URL = "https://formspree.io/f/xvzqepyk";
+let sentYes=false, sentNo=false, sentVibe=false;
 
-/* ✅ UPDATED Spanish message exactly as you provided */
-const spanishText=`He estado pensando en lo significativos que han sido para mí los momentos que hemos compartido desde noviembre del año pasado, cuando volvimos a reconectar y a salir.
-Han sido momentos simples, reales y sinceros.
-
-Disfruto tu compañía y la forma en que conectamos cuando estamos juntos.
-Me gusta cómo me siento a tu lado: la tranquilidad, las conversaciones y la naturalidad que se da entre nosotros.
-
-No tengo expectativas ni intención de apresurar nada.
-Valoro lo que hay, tal como es ahora.
-
-Quiero que sepas que aquí hay alguien que te aprecia, te respeta y disfruta genuinamente tu compañía.
-
-Así que…`;
-
-const scene=document.getElementById("scene");
-const envelope=document.getElementById("envelope");
-const spanishMsg=document.getElementById("spanishMsg");
-const tulipHint=document.getElementById("tulipHint");
-const scrollHint=document.getElementById("scrollHint");
-const toast=document.getElementById("toast");
-
-let opened=false,typed=false;
-
-function typeWriter(){
-  if(typed)return;
-  typed=true;
-  spanishMsg.textContent="";
-  let i=0;
-  const cursor=document.querySelector(".cursor");
-  const timer=setInterval(()=>{
-    spanishMsg.insertBefore(document.createTextNode(spanishText[i]||""),cursor);
-    i++;
-    if(i>=spanishText.length){
-      clearInterval(timer);
-      cursor.remove();
-      tulipHint.classList.add("show");
-    }
-  },15);
+async function sendToFormspree(payload){
+  try{
+    const res = await fetch(FORMSPREE_URL, {
+      method:"POST",
+      headers:{ "Accept":"application/json", "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok) console.warn("Formspree failed:", res.status, await res.text());
+  }catch(err){
+    console.warn("Formspree error:", err);
+  }
 }
 
-envelope.onclick=()=>{
-  if(opened)return;
-  opened=true;
-  scene.classList.add("open");
-  setTimeout(typeWriter,250);
-};
-
-document.querySelectorAll(".tulip").forEach(t=>{
-  t.onclick=()=>{
-    toast.textContent=t.dataset.note;
-    toast.classList.add("show");
-    setTimeout(()=>toast.classList.remove("show"),1500);
-  };
-});
-
-async function send(data){
-  fetch(FORMSPREE_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json","Accept":"application/json"},
-    body:JSON.stringify(data)
+async function sendChoice(choice){
+  await sendToFormspree({
+    choice,
+    page: window.location.href,
+    time: new Date().toISOString(),
+    userAgent: navigator.userAgent
   });
 }
 
-document.getElementById("yesBtn").onclick=()=>{
-  document.getElementById("result").style.display="block";
-  document.getElementById("yesGif").style.display="block";
-  document.getElementById("resultText").textContent="❤️ La mejor elección de tu vida.";
-  document.getElementById("vibeWrap").style.display="block";
+async function sendVibe(vibe){
+  await sendToFormspree({
+    choice: "YES_VIBE",
+    vibe,
+    page: window.location.href,
+    time: new Date().toISOString()
+  });
+}
 
+/* ✅ Updated Spanish message (your exact text) */
+const spanishText =
+`He estado pensando en lo significativos que han sido para mí los momentos que hemos compartido desde que volvimos a reconectar. Han sido reales y sinceros.
+Disfruto tu compañía y la forma en que conectamos cuando estamos juntos.
+Me gusta cómo me siento a tu lado: la tranquilidad, las conversaciones y la naturalidad que se da entre nosotros.
+
+También entiendo que para ti esto puede sentirse distinto. Sé que lo de nosotros o yo te trae miedos, dudas y razones para ir con cautela, y lo respeto de verdad.
+
+No escribo esto con la intención de empujar nada. Valoro lo que hay, tal como es ahora, y entiendo si hoy no me ves como una opción a futuro.
+
+Solo quiero que sepas que aquí hay alguien que te aprecia, te respeta y disfruta genuinamente tu compañía, sin expectativas ni presión.
+
+Así que…`;
+
+/* Open + Typewriter */
+const scene = document.getElementById("scene");
+const envelope = document.getElementById("envelope");
+const spanishMsg = document.getElementById("spanishMsg");
+const tulipHint = document.getElementById("tulipHint");
+
+let opened=false, typed=false;
+
+function typeWriter(){
+  if(typed) return;
+  typed = true;
+
+  const cursor = spanishMsg.querySelector(".cursor");
+  // clear everything except cursor
+  spanishMsg.textContent = "";
+  if(cursor) spanishMsg.appendChild(cursor);
+
+  let i=0;
+  const timer = setInterval(()=>{
+    const ch = spanishText[i] || "";
+    if(cursor){
+      cursor.insertAdjacentText("beforebegin", ch);
+    }else{
+      spanishMsg.textContent += ch;
+    }
+    i++;
+
+    if(i >= spanishText.length){
+      clearInterval(timer);
+      setTimeout(()=>{
+        cursor && cursor.remove();
+        tulipHint.classList.add("show");
+      }, 350);
+    }
+  }, 15);
+}
+
+function openEnvelope(){
+  if(opened) return;
+  opened=true;
+  scene.classList.add("open");
+  setTimeout(typeWriter, 250);
+}
+
+envelope.addEventListener("click", openEnvelope);
+envelope.addEventListener("touchstart", openEnvelope, { passive:true });
+envelope.addEventListener("keydown", (e)=> {
+  if(e.key==="Enter" || e.key===" ") openEnvelope();
+});
+
+/* Tulip notes + toast */
+const toast = document.getElementById("toast");
+let toastTimer=null;
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove("show"), 1600);
+}
+
+document.querySelectorAll(".tulip").forEach(t=>{
+  t.addEventListener("click", ()=> showToast(t.dataset.note || "🌷"));
+  t.addEventListener("touchstart", ()=> showToast(t.dataset.note || "🌷"), { passive:true });
+});
+
+/* Buttons */
+const yesBtn = document.getElementById("yesBtn");
+const noBtn  = document.getElementById("noBtn");
+const hint   = document.getElementById("hint");
+
+const result     = document.getElementById("result");
+const yesGif     = document.getElementById("yesGif");
+const noGif      = document.getElementById("noGif");
+const resultText = document.getElementById("resultText");
+const scrollHint = document.getElementById("scrollHint");
+
+const vibeWrap = document.getElementById("vibeWrap");
+const vibeNote = document.getElementById("vibeNote");
+
+const YES_MESSAGE =
+  "La mejor elección de tu vida. Gracias por esta oportunidad. Un mensaje y flores te llegarán en unos minutos. El 14 la pasaremos muy bonito";
+const NO_MESSAGE =
+  "Thank you for being honest. I respect your decision.";
+
+function celebrate(){
+  if(typeof confetti !== "function") return;
+  confetti({ particleCount:120, spread:90, origin:{ y:0.62 }});
+  setTimeout(()=>confetti({ particleCount:80, spread:75, origin:{ y:0.62 }}), 180);
+}
+
+function showScrollHint(){
   scrollHint.classList.add("show");
-  setTimeout(()=>scrollHint.classList.remove("show"),5000);
+  setTimeout(()=> scrollHint.classList.remove("show"), 5000);
+}
 
-  confetti({particleCount:120,spread:90});
-  send({choice:"YES", page:location.href, time:new Date().toISOString()});
-};
+yesBtn.addEventListener("click", async ()=>{
+  result.style.display="block";
+  yesGif.style.display="block";
+  noGif.style.display="none";
+  resultText.textContent="❤️ " + YES_MESSAGE;
+  hint.textContent="";
+  celebrate();
 
-let dodges=0;
-document.getElementById("noBtn").onclick=(e)=>{
-  if(dodges<5){
-    e.target.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*80-40}px)`;
-    dodges++;
-  }else{
-    document.getElementById("result").style.display="block";
-    document.getElementById("noGif").style.display="block";
-    document.getElementById("resultText").textContent="Thank you for being honest.";
+  vibeWrap.style.display="block";
+  vibeNote.textContent="Pick what feels most you.";
+  showScrollHint();
 
-    scrollHint.classList.add("show");
-    setTimeout(()=>scrollHint.classList.remove("show"),5000);
-
-    send({choice:"NO", page:location.href, time:new Date().toISOString()});
+  if(!sentYes){
+    sentYes = true;
+    await sendChoice("YES");
   }
-};
+});
+
+document.querySelectorAll(".vibeBtn").forEach(btn=>{
+  btn.addEventListener("click", async ()=>{
+    const vibe = btn.dataset.vibe;
+    vibeNote.textContent = `Perfect. ${vibe} — noted.`;
+    showToast("Noted ✨");
+    if(!sentVibe){
+      sentVibe = true;
+      await sendVibe(vibe);
+    }
+  });
+});
+
+/* No button dodges 5 times, then works */
+let dodgeCount=0;
+const MAX_DODGES=5;
+
+function dodge(){
+  const x = Math.random()*220 - 110;
+  const y = Math.random()*90 - 45;
+  noBtn.classList.add("moving");
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+  setTimeout(()=>noBtn.classList.remove("moving"), 200);
+
+  const lines = [
+    "😅 Take your time…",
+    "No pressure.",
+    "Honesty > pressure.",
+    "Whatever you choose, I’ll respect it."
+  ];
+  hint.textContent = lines[Math.min(dodgeCount, lines.length-1)];
+}
+
+noBtn.addEventListener("mouseenter", ()=>{
+  if(dodgeCount < MAX_DODGES){ dodgeCount++; dodge(); }
+});
+
+noBtn.addEventListener("touchstart", (e)=>{
+  if(dodgeCount < MAX_DODGES){
+    e.preventDefault();
+    dodgeCount++;
+    dodge();
+  }
+}, { passive:false });
+
+noBtn.addEventListener("click", async ()=>{
+  if(dodgeCount < MAX_DODGES){ dodgeCount++; dodge(); return; }
+
+  noBtn.style.transform="translate(0,0)";
+  result.style.display="block";
+  noGif.style.display="block";
+  yesGif.style.display="none";
+  resultText.textContent="😔 " + NO_MESSAGE;
+
+  vibeWrap.style.display="none";
+  vibeNote.textContent="";
+  showScrollHint();
+
+  if(!sentNo){
+    sentNo = true;
+    await sendChoice("NO");
+  }
+});
 </script>
 </body>
 </html>
