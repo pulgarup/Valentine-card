@@ -13,7 +13,6 @@
 :root{
   --bg1:#fff1f2;
   --bg2:#f8fafc;
-  --text:#0f172a;
   --muted:#475569;
   --accent:#be123c;
   --accent2:#e11d48;
@@ -31,13 +30,14 @@ body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   background: linear-gradient(135deg,var(--bg1),var(--bg2));
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   padding:18px;
   padding-left: max(18px, env(safe-area-inset-left));
   padding-right:max(18px, env(safe-area-inset-right));
   padding-top:  max(18px, env(safe-area-inset-top));
   padding-bottom:max(18px, env(safe-area-inset-bottom));
+  min-height: 100vh;
 }
 
 .card{
@@ -57,11 +57,12 @@ body{
   margin:6px 0 12px;
 }
 
+/* ✅ iPhone/Mac safe layout: NO svh, NO fixed viewport math */
 .stage{
   position:relative;
   width:min(720px,100%);
-  height:min(78svh,720px);
-  margin:0 auto;
+  min-height:440px;
+  margin:24px auto 10px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -71,6 +72,7 @@ body{
   position:relative;
   width:min(560px,94vw);
   height:360px;
+  margin:0 auto;
 }
 
 /* Letter: centered, hidden until open */
@@ -100,7 +102,7 @@ body{
   border:1px solid rgba(226,232,240,.95);
   border-radius:18px;
   box-shadow:0 16px 34px rgba(2,6,23,.10);
-  max-height:min(68svh,560px);
+  max-height: min(64vh, 560px);
   overflow:auto;
   -webkit-overflow-scrolling: touch;
   position:relative;
@@ -120,14 +122,12 @@ body{
   font-size:30px;
   color:#0b1220;
   margin:0;
-  text-align:center;
 }
 .withLove{
   font-family:"Cormorant Garamond",serif;
   font-weight:600;
   font-size:18px;
   margin:4px 0 12px;
-  text-align:center;
   color:#0b1220;
 }
 
@@ -138,7 +138,7 @@ body{
   color:#334155;
   white-space:pre-line;
   margin:0 0 10px;
-  min-height:240px;
+  min-height:260px;
 }
 
 .cursor{
@@ -173,7 +173,6 @@ body{
   font-size:13px;
   color:#64748b;
   font-weight:600;
-  text-align:center;
 }
 
 .actions{
@@ -205,7 +204,6 @@ body{
   text-align:center;
 }
 
-/* Result area stays hidden until YES/NO */
 .result{
   display:none;
   margin-top:16px;
@@ -230,10 +228,9 @@ body{
   margin:12px 0 0;
   line-height:1.65;
   font-weight:800;
-  color:var(--text);
+  color:#0f172a;
 }
 
-/* Vibe chooser */
 .vibeWrap{
   display:none;
   margin-top:14px;
@@ -244,7 +241,6 @@ body{
   font-weight:900;
   color:#0f172a;
   margin:0 0 10px;
-  text-align:center;
 }
 .vibeBtns{
   display:flex;
@@ -265,7 +261,6 @@ body{
   margin:10px 0 0;
   color:#475569;
   font-weight:800;
-  text-align:center;
 }
 
 /* Envelope */
@@ -305,6 +300,7 @@ body{
   z-index:6;
   white-space:nowrap;
 }
+
 .flap{
   position:absolute;
   top:-10px;
@@ -342,7 +338,7 @@ body{
   opacity:.95;
 }
 
-/* Tulips (messages) */
+/* Tulips */
 .tulip{
   position:absolute;
   font-size:26px;
@@ -380,20 +376,20 @@ body{
   transform:translateX(-50%) translateY(-6px);
 }
 
-@media (max-width:420px){
-  .toName{ font-size:40px; }
-  .btn{ min-width:130px; }
-  .textArea{ padding:14px; }
-  .sub{ font-size:19px; min-height:260px; }
-  .letterPage{ padding:14px; }
-  :root{ --envDrop: 60px; }
-}
-
 footer{
   margin-top:12px;
   font-size:12px;
   color:var(--muted);
   text-align:center;
+}
+
+@media (max-width:420px){
+  .toName{ font-size:40px; }
+  .btn{ min-width:130px; }
+  .textArea{ padding:14px; }
+  .sub{ font-size:19px; min-height:290px; }
+  .letterPage{ padding:14px; max-height:min(66vh,560px); }
+  :root{ --envDrop: 60px; }
 }
 </style>
 </head>
@@ -521,7 +517,7 @@ async function sendVibe(vibe){
   });
 }
 
-/* ✅ Updated Spanish message */
+/* ✅ Spanish message */
 const spanishText =
 `He estado pensando en lo significativos que han sido para mí los momentos que hemos compartido desde que volvimos a reconectar. Han sido reales y sinceros.
 Disfruto tu compañía y la forma en que conectamos cuando estamos juntos.
