@@ -296,7 +296,7 @@ body{
 .toast{
   position:fixed;
   left:50%;
-  bottom:20px;
+  bottom: max(20px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   background:#0f172a;
   color:#fff;
@@ -393,10 +393,18 @@ footer{
 
 <script>
 const FORMSPREE_URL="https://formspree.io/f/xvzqepyk";
-const spanishText=`Me gusta cuando compartimos y cuando hacemos cosas nuevas juntos.
-Disfruto conversar, salir y descubrir planes sin presión.
 
-Quiero que sepas que aquí hay alguien que te aprecia, te respeta y valora tu compañía.
+/* ✅ UPDATED Spanish message exactly as you provided */
+const spanishText=`He estado pensando en lo significativos que han sido para mí los momentos que hemos compartido desde noviembre del año pasado, cuando volvimos a reconectar y a salir.
+Han sido momentos simples, reales y sinceros.
+
+Disfruto tu compañía y la forma en que conectamos cuando estamos juntos.
+Me gusta cómo me siento a tu lado: la tranquilidad, las conversaciones y la naturalidad que se da entre nosotros.
+
+No tengo expectativas ni intención de apresurar nada.
+Valoro lo que hay, tal como es ahora.
+
+Quiero que sepas que aquí hay alguien que te aprecia, te respeta y disfruta genuinamente tu compañía.
 
 Así que…`;
 
@@ -442,7 +450,11 @@ document.querySelectorAll(".tulip").forEach(t=>{
 });
 
 async function send(data){
-  fetch(FORMSPREE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  fetch(FORMSPREE_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify(data)
+  });
 }
 
 document.getElementById("yesBtn").onclick=()=>{
@@ -450,10 +462,12 @@ document.getElementById("yesBtn").onclick=()=>{
   document.getElementById("yesGif").style.display="block";
   document.getElementById("resultText").textContent="❤️ La mejor elección de tu vida.";
   document.getElementById("vibeWrap").style.display="block";
+
   scrollHint.classList.add("show");
   setTimeout(()=>scrollHint.classList.remove("show"),5000);
+
   confetti({particleCount:120,spread:90});
-  send({choice:"YES"});
+  send({choice:"YES", page:location.href, time:new Date().toISOString()});
 };
 
 let dodges=0;
@@ -465,9 +479,11 @@ document.getElementById("noBtn").onclick=(e)=>{
     document.getElementById("result").style.display="block";
     document.getElementById("noGif").style.display="block";
     document.getElementById("resultText").textContent="Thank you for being honest.";
+
     scrollHint.classList.add("show");
     setTimeout(()=>scrollHint.classList.remove("show"),5000);
-    send({choice:"NO"});
+
+    send({choice:"NO", page:location.href, time:new Date().toISOString()});
   }
 };
 </script>
